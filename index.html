@@ -1861,6 +1861,40 @@
                 }
             });
 
+            // Support Tips - Always show helpful reminders
+            html += `
+                <div class="answer-card" style="border-color: rgba(139, 92, 246, 0.3); margin-top: 1.5rem;">
+                    <div class="answer-header" style="border-bottom-color: rgba(139, 92, 246, 0.2);">
+                        <div class="answer-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">💡</div>
+                        <div class="answer-title">Support Tips</div>
+                    </div>
+                    <div class="answer-content">
+                        <div style="display: grid; gap: 0.75rem;">
+                            <div style="display: flex; align-items: start; gap: 0.5rem;">
+                                <span>💰</span>
+                                <span><strong>Plan & Pricing:</strong> API access requires <strong>Team</strong> or <strong>Enterprise</strong> plan. <a href="https://hubstaff.com/pricing" target="_blank" style="color: var(--accent-purple);">View pricing page →</a></span>
+                            </div>
+                            <div style="display: flex; align-items: start; gap: 0.5rem;">
+                                <span>📍</span>
+                                <span><strong>Check-in/Check-out:</strong> Explicit attendance tracking requires the <strong>Locations add-on</strong> (Job Sites with geofencing). Activity-based attendance is included in all plans.</span>
+                            </div>
+                            <div style="display: flex; align-items: start; gap: 0.5rem;">
+                                <span>⚡</span>
+                                <span><strong>Rate Limits:</strong> 350 requests/minute per token. Use <code style="background: var(--bg-dark); padding: 2px 6px; border-radius: 4px;">X-RateLimit-Remaining</code> header to monitor.</span>
+                            </div>
+                            <div style="display: flex; align-items: start; gap: 0.5rem;">
+                                <span>🔐</span>
+                                <span><strong>Authentication:</strong> API tokens are managed in <strong>Settings → Integrations → API</strong> by organization admins.</span>
+                            </div>
+                            <div style="display: flex; align-items: start; gap: 0.5rem;">
+                                <span>📖</span>
+                                <span><strong>Developer Docs:</strong> <a href="https://developer.hubstaff.com/" target="_blank" style="color: var(--accent-purple);">API Documentation</a> · <a href="https://developer.hubstaff.com/authentication" target="_blank" style="color: var(--accent-purple);">Auth Guide</a> · <a href="https://github.com/NetsoftHoldings/public-api-postman" target="_blank" style="color: var(--accent-purple);">Postman Collection</a></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
             // Related topics
             if (results.relatedTopics.length > 0) {
                 html += `
