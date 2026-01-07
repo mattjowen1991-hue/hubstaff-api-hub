@@ -596,6 +596,7 @@
                 <button class="quick-btn" onclick="quickSearch('webhooks')">🔔 Webhooks</button>
                 <button class="quick-btn" onclick="quickSearch('rate limits')">⚡ Rate Limits</button>
                 <button class="quick-btn" onclick="quickSearch('users members')">👥 Users & Teams</button>
+                <button class="quick-btn" onclick="quickSearch('developer resources')">🛠️ Dev Resources</button>
             </div>
         </section>
 
@@ -1203,6 +1204,67 @@
             }
         };
 
+        // =====================================================
+        // DEVELOPER RESOURCES & GUIDES
+        // =====================================================
+        const developerResources = {
+            officialDocs: {
+                title: "Official Documentation",
+                icon: "📖",
+                links: [
+                    { name: "API Documentation", url: "https://developer.hubstaff.com/", desc: "Interactive API docs with endpoint explorer" },
+                    { name: "Authentication Guide", url: "https://developer.hubstaff.com/authentication", desc: "OAuth 2.0 and token setup instructions" }
+                ]
+            },
+            codeExamples: {
+                title: "Official Code Examples",
+                icon: "💻",
+                links: [
+                    { name: "Node.js Demo", url: "https://github.com/NetsoftHoldings/public-api-nodejs-demo", desc: "Express.js app using openid-client package" },
+                    { name: "PHP Demo", url: "https://github.com/NetsoftHoldings/public-api-php-demo", desc: "CLI tool using php-openid-client" },
+                    { name: "Postman Collection", url: "https://github.com/NetsoftHoldings/public-api-postman", desc: "Ready-to-use Postman collection for testing" }
+                ]
+            },
+            authSpecs: {
+                title: "Authentication Standards",
+                icon: "🔐",
+                links: [
+                    { name: "OpenID Connect Specs", url: "https://openid.net/specs/", desc: "OIDC protocol specification" },
+                    { name: "JWT.io", url: "https://jwt.io/", desc: "JWT debugger and library reference" },
+                    { name: "OAuth 2.0 RFC", url: "https://tools.ietf.org/html/rfc6749", desc: "OAuth 2.0 authorization framework" }
+                ]
+            },
+            keyEndpoints: {
+                title: "Key API Endpoints",
+                icon: "🌐",
+                links: [
+                    { name: "API Base URL", url: "https://api.hubstaff.com/", desc: "Main API endpoint (v2)" },
+                    { name: "Account/Auth Domain", url: "https://account.hubstaff.com/", desc: "OpenID Connect discovery endpoint" },
+                    { name: "Tasks API Base URL", url: "https://tasks.hubstaff.com/api/", desc: "Hubstaff Tasks API (v1)" }
+                ]
+            },
+            tokenInfo: {
+                title: "Token Management",
+                icon: "🎫",
+                details: [
+                    "Personal Access Tokens (PAT) generate short-lived access tokens",
+                    "Access tokens must be refreshed periodically using refresh_token",
+                    "Store refresh_token securely - it's long-lived",
+                    "Use OpenID Connect discovery to get token endpoints automatically",
+                    "Discovery URL: https://account.hubstaff.com/.well-known/openid-configuration"
+                ]
+            },
+            configExample: {
+                title: "Token Config Example",
+                icon: "⚙️",
+                code: `{
+    "token": {
+        "refresh_token": "your_personal_access_token_here"
+    }
+}`
+            }
+        };
+
         function renderKnowledgeBase() {
             const grid = document.getElementById('kbGrid');
             grid.innerHTML = Object.entries(apiKnowledge).map(([key, item]) => `
@@ -1298,7 +1360,24 @@
                 'task list': ['tasksLists'],
                 'task folder': ['tasksFolders'],
                 'complete task': ['tasksTasks'],
-                'assigned tasks': ['tasksTasks']
+                'assigned tasks': ['tasksTasks'],
+                // Developer resources keywords
+                'code example': ['developerResources'],
+                'sample code': ['developerResources'],
+                'node': ['developerResources'],
+                'nodejs': ['developerResources'],
+                'php': ['developerResources'],
+                'postman': ['developerResources'],
+                'jwt': ['developerResources', 'authentication'],
+                'openid': ['developerResources', 'authentication'],
+                'oidc': ['developerResources', 'authentication'],
+                'discovery': ['developerResources', 'authentication'],
+                'refresh token': ['developerResources', 'authentication'],
+                'access token': ['developerResources', 'authentication'],
+                'developer': ['developerResources'],
+                'getting started': ['developerResources', 'authentication'],
+                'setup': ['developerResources', 'authentication'],
+                'example': ['developerResources']
             };
 
             // Find matching categories
@@ -1411,6 +1490,13 @@
                 'view attachment': { answer: 'YES', api: 'Tasks API', endpoint: 'GET /v1/tasks/{task_id}/attachments', note: 'Can view attachment list' },
                 'assign task': { answer: 'YES', api: 'Tasks API', endpoint: 'PATCH /v1/tasks/{task_id}', note: 'Update task to change assignee' },
                 'get assigned tasks': { answer: 'YES', api: 'Tasks API', endpoint: 'GET /v1/tasks/my/assigned', note: 'View tasks assigned to current user' },
+
+                // Developer resource capabilities
+                'use postman': { answer: 'YES', api: 'Tools', endpoint: 'github.com/NetsoftHoldings/public-api-postman', note: 'Official Postman collection available for API testing' },
+                'use nodejs': { answer: 'YES', api: 'Tools', endpoint: 'github.com/NetsoftHoldings/public-api-nodejs-demo', note: 'Official Node.js demo with openid-client' },
+                'use php': { answer: 'YES', api: 'Tools', endpoint: 'github.com/NetsoftHoldings/public-api-php-demo', note: 'Official PHP demo available' },
+                'refresh token': { answer: 'YES', api: 'Main API', endpoint: 'POST /oauth/token', note: 'Use refresh_token grant type to get new access tokens' },
+                'get access token': { answer: 'YES', api: 'Main API', endpoint: 'POST /oauth/token', note: 'Exchange refresh_token for short-lived access token' },
             };
 
             // Check for matches
@@ -1593,6 +1679,37 @@
                     <li><span class="status-badge status-supported">✓</span> <strong>Enterprise</strong> - Full API access with potential for higher rate limits</li>
                 </ul>
                 <p>API tokens are managed in the organization settings by account administrators.</p>`;
+            }
+                // Developer resources query
+            else if (query.includes('developer') || query.includes('example') || query.includes('code') || query.includes('postman') || query.includes('node') || query.includes('php') || query.includes('getting started') || query.includes('setup') || query.includes('jwt') || query.includes('openid')) {
+                summary = `<p><strong>Developer Resources for Hubstaff API Integration:</strong></p>
+                <div class="info-box success">
+                    <span class="info-icon">📖</span>
+                    <div class="info-content">
+                        <strong>Official Documentation:</strong><br>
+                        • <a href="https://developer.hubstaff.com/" target="_blank" style="color: var(--primary);">API Docs & Interactive Explorer</a><br>
+                        • <a href="https://developer.hubstaff.com/authentication" target="_blank" style="color: var(--primary);">Authentication Guide</a>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <span class="info-icon">💻</span>
+                    <div class="info-content">
+                        <strong>Official Code Examples:</strong><br>
+                        • <a href="https://github.com/NetsoftHoldings/public-api-nodejs-demo" target="_blank" style="color: var(--accent-blue);">Node.js Demo</a> - Express.js with openid-client<br>
+                        • <a href="https://github.com/NetsoftHoldings/public-api-php-demo" target="_blank" style="color: var(--accent-blue);">PHP Demo</a> - CLI tool with php-openid-client<br>
+                        • <a href="https://github.com/NetsoftHoldings/public-api-postman" target="_blank" style="color: var(--accent-blue);">Postman Collection</a> - Ready for API testing
+                    </div>
+                </div>
+                <div class="info-box warning">
+                    <span class="info-icon">🔐</span>
+                    <div class="info-content">
+                        <strong>Key URLs:</strong><br>
+                        • API Base: <code style="background: var(--bg-dark); padding: 2px 6px; border-radius: 4px;">https://api.hubstaff.com/v2/</code><br>
+                        • Auth Domain: <code style="background: var(--bg-dark); padding: 2px 6px; border-radius: 4px;">https://account.hubstaff.com/</code><br>
+                        • OpenID Discovery: <code style="background: var(--bg-dark); padding: 2px 6px; border-radius: 4px;">https://account.hubstaff.com/.well-known/openid-configuration</code>
+                    </div>
+                </div>
+                <p><strong>Token Setup:</strong> Create a <code style="background: var(--bg-dark); padding: 2px 6px; border-radius: 4px;">configState.json</code> with your refresh_token. The demos auto-refresh access tokens as needed.</p>`;
             }
             // Default summary
             else {
