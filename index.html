@@ -656,7 +656,8 @@
                     { method: "GET", path: "/v2/projects/{project_id}/activities", desc: "List project activities" },
                     { method: "GET", path: "/v2/projects/{project_id}/activities/updates", desc: "Get project activity updates" },
                     { method: "GET", path: "/v2/projects/{project_id}/activities/daily", desc: "Get project daily activities" },
-                    { method: "GET", path: "/v2/projects/{project_id}/last_activities", desc: "Get project last activities" }
+                    { method: "GET", path: "/v2/projects/{project_id}/last_activities", desc: "Get project last activities" },
+                    { method: "GET", path: "/v2/projects/{project_id}/activities/daily/updates", desc: "List project daily activities updates" }
                 ],
                 status: "supported"
             },
@@ -680,7 +681,8 @@
                 icon: "🕐",
                 description: "Individual time entry records with start/stop times",
                 endpoints: [
-                    { method: "GET", path: "/v2/users/{user_id}/time_entries", desc: "List user time entries" }
+                    { method: "GET", path: "/v2/users/{user_id}/time_entries", desc: "List user time entries" },
+                    { method: "POST", path: "/v2/users/{user_id}/time_entries", desc: "Create time entry" }
                 ],
                 details: [
                     "Individual time tracking records",
@@ -854,7 +856,9 @@
                     { method: "GET", path: "/v2/users/me/webhooks", desc: "List user webhooks" },
                     { method: "GET", path: "/v2/webhooks/{webhook_id}", desc: "Get webhook details" },
                     { method: "DELETE", path: "/v2/webhooks/{webhook_id}", desc: "Delete webhook" },
-                    { method: "POST", path: "/v2/webhooks/{webhook_id}/activate", desc: "Activate webhook" }
+                    { method: "POST", path: "/v2/webhooks/{webhook_id}/activate", desc: "Activate webhook" },
+                    { method: "POST", path: "/v2/users/me/webhooks", desc: "Create me webhook" },
+                    { method: "POST", path: "/v2/projects/{project_id}/webhooks", desc: "Create project webhook" }
                 ],
                 details: [
                     "Supported events: time_entry, activity, screenshot, project, task, user updates",
@@ -1016,6 +1020,7 @@
                     { method: "PUT", path: "/v2/insights/smart_notification_rules/{rule_id}", desc: "Update rule" },
                     { method: "DELETE", path: "/v2/insights/smart_notification_rules/{rule_id}", desc: "Delete rule" },
                     { method: "POST", path: "/v2/insights/smart_notification_rules/{rule_id}/toggle_status", desc: "Toggle rule status" },
+                    { method: "PATCH", path: "/v2/insights/smart_notification_rules/{rule_id}/toggle_status", desc: "Toggle smart notification rule" },
                     { method: "GET", path: "/v2/organizations/{organization_id}/insights/smart_notifications", desc: "List notifications" },
                     { method: "GET", path: "/v2/organizations/{organization_id}/insights/unusual_activities", desc: "Unusual activities" }
                 ],
@@ -1029,7 +1034,8 @@
                     { method: "GET", path: "/v2/organizations/{organization_id}/global_todos", desc: "List global to-dos" },
                     { method: "POST", path: "/v2/organizations/{organization_id}/global_todos", desc: "Create global to-do" },
                     { method: "GET", path: "/v2/organizations/{organization_id}/global_todos/{id}", desc: "Get global to-do" },
-                    { method: "PUT", path: "/v2/organizations/{organization_id}/global_todos/{id}", desc: "Update global to-do" }
+                    { method: "PUT", path: "/v2/organizations/{organization_id}/global_todos/{id}", desc: "Update global to-do" },
+                    { method: "DELETE", path: "/v2/organizations/{organization_id}/global_todos/{id}", desc: "Delete global to-do" }
                 ],
                 status: "supported"
             },
