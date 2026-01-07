@@ -1063,6 +1063,146 @@
             }
         };
 
+        // =====================================================
+        // HUBSTAFF TASKS API - tasks.hubstaff.com/api/v1
+        // =====================================================
+        const tasksApiKnowledge = {
+            tasksAttachments: {
+                title: "Attachments (Tasks API)",
+                icon: "📎",
+                description: "View file attachments on tasks",
+                endpoints: [
+                    { method: "GET", path: "/v1/tasks/{task_id}/attachments", desc: "List all attachments for a task" }
+                ],
+                capabilities: ["View attachments", "List task files"],
+                limitations: ["Read-only - cannot upload/delete attachments via API"]
+            },
+            tasksChecklists: {
+                title: "Checklists (Tasks API)",
+                icon: "☑️",
+                description: "View task checklists and their items",
+                endpoints: [
+                    { method: "GET", path: "/v1/checklists/{checklist_id}", desc: "Get a specific checklist" },
+                    { method: "GET", path: "/v1/checklists/{checklist_id}/items", desc: "List items in a checklist" },
+                    { method: "GET", path: "/v1/tasks/{task_id}/checklists", desc: "List all checklists for a task" }
+                ],
+                capabilities: ["View checklists", "View checklist items"],
+                limitations: ["Read-only - cannot create/update/delete checklists via API"]
+            },
+            tasksComments: {
+                title: "Comments (Tasks API)",
+                icon: "💬",
+                description: "Add comments and discussions to tasks",
+                endpoints: [
+                    { method: "GET", path: "/v1/tasks/{task_id}/comments", desc: "List all comments on a task" },
+                    { method: "POST", path: "/v1/tasks/{task_id}/comments", desc: "Add a comment to a task" }
+                ],
+                capabilities: ["View comments", "Add new comments"],
+                limitations: ["Cannot edit or delete existing comments via API"]
+            },
+            tasksFolders: {
+                title: "Folders (Tasks API)",
+                icon: "📂",
+                description: "Organize projects into folders",
+                endpoints: [
+                    { method: "GET", path: "/v1/folders", desc: "List all folders" },
+                    { method: "GET", path: "/v1/folders/{folder_id}", desc: "Get a specific folder" },
+                    { method: "GET", path: "/v1/organizations/{organization_id}/folders", desc: "List folders in an organization" },
+                    { method: "POST", path: "/v1/organizations/{organization_id}/folders", desc: "Create a new folder" }
+                ],
+                capabilities: ["List folders", "View folder details", "Create folders"],
+                limitations: ["Cannot update or delete folders via API"]
+            },
+            tasksLabels: {
+                title: "Labels (Tasks API)",
+                icon: "🏷️",
+                description: "Categorize tasks with color-coded labels",
+                endpoints: [
+                    { method: "GET", path: "/v1/projects/{project_id}/labels", desc: "List all labels in a project" },
+                    { method: "POST", path: "/v1/projects/{project_id}/labels", desc: "Create a new label" }
+                ],
+                capabilities: ["View labels", "Create labels"],
+                limitations: ["Cannot update or delete labels via API"]
+            },
+            tasksLists: {
+                title: "Lists (Tasks API)",
+                icon: "📑",
+                description: "Organize tasks into lists (like Kanban columns)",
+                endpoints: [
+                    { method: "GET", path: "/v1/lists/{list_id}", desc: "Get a specific list" },
+                    { method: "GET", path: "/v1/projects/{project_id}/lists", desc: "List all lists in a project" },
+                    { method: "POST", path: "/v1/projects/{project_id}/lists", desc: "Create a new list" }
+                ],
+                capabilities: ["View lists", "Create lists"],
+                limitations: ["Cannot update or delete lists via API"]
+            },
+            tasksMembers: {
+                title: "Members (Tasks API)",
+                icon: "👤",
+                description: "View organization members and their roles",
+                endpoints: [
+                    { method: "GET", path: "/v1/members/me", desc: "Get current authenticated member" },
+                    { method: "GET", path: "/v1/members/{member_id}", desc: "Get a specific member" },
+                    { method: "GET", path: "/v1/organizations/{organization_id}/members", desc: "List members in an organization" },
+                    { method: "GET", path: "/v1/projects/{project_id}/members", desc: "List members in a project" }
+                ],
+                capabilities: ["View member details", "List organization members", "List project members"],
+                limitations: ["Read-only - cannot add/remove/update members via API"]
+            },
+            tasksOrganizations: {
+                title: "Organizations (Tasks API)",
+                icon: "🏢",
+                description: "View organizations and their settings",
+                endpoints: [
+                    { method: "GET", path: "/v1/organizations", desc: "List all organizations" },
+                    { method: "GET", path: "/v1/organizations/{organization_id}", desc: "Get a specific organization" }
+                ],
+                capabilities: ["View organizations", "View organization details"],
+                limitations: ["Read-only - cannot create/update organizations via API"]
+            },
+            tasksProjects: {
+                title: "Projects (Tasks API)",
+                icon: "📁",
+                description: "Create and manage projects for task organization",
+                endpoints: [
+                    { method: "GET", path: "/v1/projects", desc: "List all projects" },
+                    { method: "GET", path: "/v1/projects/{project_id}", desc: "Get a specific project" },
+                    { method: "GET", path: "/v1/folders/{folder_id}/projects", desc: "List projects in a folder" },
+                    { method: "POST", path: "/v1/folders/{folder_id}/projects", desc: "Create a project in a folder" },
+                    { method: "GET", path: "/v1/organizations/{organization_id}/projects", desc: "List projects in an organization" }
+                ],
+                capabilities: ["List projects", "View project details", "Create projects in folders"],
+                limitations: ["Cannot update or delete projects via API"]
+            },
+            tasksTasks: {
+                title: "Tasks (Tasks API)",
+                icon: "✅",
+                description: "Create, update, and track tasks",
+                endpoints: [
+                    { method: "GET", path: "/v1/tasks/{task_id}", desc: "Get a specific task" },
+                    { method: "PATCH", path: "/v1/tasks/{task_id}", desc: "Update a task" },
+                    { method: "PATCH", path: "/v1/tasks/{task_id}/complete", desc: "Mark a task as complete" },
+                    { method: "GET", path: "/v1/tasks/my/assigned", desc: "List tasks assigned to current user" },
+                    { method: "GET", path: "/v1/lists/{list_id}/tasks", desc: "List tasks in a list" },
+                    { method: "POST", path: "/v1/lists/{list_id}/tasks", desc: "Create a task in a list" },
+                    { method: "GET", path: "/v1/projects/{project_id}/tasks", desc: "List tasks in a project" }
+                ],
+                capabilities: ["Create tasks", "Update tasks", "Complete tasks", "View assigned tasks"],
+                limitations: ["Cannot delete tasks via API"]
+            },
+            tasksTimeEntries: {
+                title: "Time Entries (Tasks API)",
+                icon: "⏱️",
+                description: "Track time spent on tasks",
+                endpoints: [
+                    { method: "GET", path: "/v1/tasks/{task_id}/time_entries", desc: "List time entries for a task" },
+                    { method: "POST", path: "/v1/tasks/{task_id}/time_entries", desc: "Create a time entry for a task" }
+                ],
+                capabilities: ["View time entries", "Log time to tasks"],
+                limitations: ["Cannot update or delete time entries via API"]
+            }
+        };
+
         function renderKnowledgeBase() {
             const grid = document.getElementById('kbGrid');
             grid.innerHTML = Object.entries(apiKnowledge).map(([key, item]) => `
@@ -1147,7 +1287,18 @@
                 'holiday': ['holidays', 'timeOff'],
                 'leave': ['timeOff', 'holidays'],
                 'pto': ['timeOff'],
-                'vacation': ['timeOff', 'holidays']
+                'vacation': ['timeOff', 'holidays'],
+                // Tasks API keywords
+                'tasks api': ['tasksTasks', 'tasksProjects', 'tasksLists'],
+                'hubstaff tasks': ['tasksTasks', 'tasksProjects', 'tasksLists'],
+                'checklist': ['tasksChecklists'],
+                'task comment': ['tasksComments'],
+                'task label': ['tasksLabels'],
+                'kanban': ['tasksLists', 'tasksTasks'],
+                'task list': ['tasksLists'],
+                'task folder': ['tasksFolders'],
+                'complete task': ['tasksTasks'],
+                'assigned tasks': ['tasksTasks']
             };
 
             // Find matching categories
@@ -1156,6 +1307,15 @@
             Object.entries(keywordMap).forEach(([keyword, categories]) => {
                 if (query.includes(keyword)) {
                     categories.forEach(cat => matchedCategories.add(cat));
+                }
+            });
+
+            // Also check Tasks API knowledge
+            Object.entries(tasksApiKnowledge).forEach(([key, data]) => {
+                const titleMatch = data.title && data.title.toLowerCase().includes(query);
+                const descMatch = data.description && data.description.toLowerCase().includes(query);
+                if (titleMatch || descMatch) {
+                    matchedCategories.add(key);
                 }
             });
 
@@ -1395,6 +1555,57 @@
                     }
                 });
             }
+
+            // Show Tasks API matched endpoints
+            Object.entries(tasksApiKnowledge).forEach(([key, match]) => {
+                if (query.toLowerCase().includes('task') || query.toLowerCase().includes('checklist') || query.toLowerCase().includes('kanban')) {
+                    if (match.endpoints && match.endpoints.length > 0) {
+                        html += `
+                            <div class="category-section">
+                                <div class="category-header" onclick="toggleCategory(this)" style="border-color: rgba(0, 212, 170, 0.3);">
+                                    <div class="category-icon" style="background: rgba(0, 212, 170, 0.1); color: #00d4aa;">${match.icon}</div>
+                                    <div class="category-title">${match.title}</div>
+                                    <span style="background: rgba(0, 212, 170, 0.15); color: #00d4aa; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem;">TASKS API</span>
+                                    <div class="category-count">${match.endpoints.length} endpoints</div>
+                                    <span>▼</span>
+                                </div>
+                                <div class="category-content">
+                                    <div class="info-box" style="background: rgba(0, 212, 170, 0.1); border-color: rgba(0, 212, 170, 0.2);">
+                                        <span class="info-icon" style="color: #00d4aa;">📋</span>
+                                        <div class="info-content">
+                                            <strong>Hubstaff Tasks API</strong> (separate product)<br>
+                                            Base URL: https://tasks.hubstaff.com/api
+                                        </div>
+                                    </div>
+                                    <div class="endpoints-grid">
+                                        ${match.endpoints.map(ep => `
+                                            <div class="endpoint-card" style="border-color: rgba(0, 212, 170, 0.3);">
+                                                <div class="endpoint-header">
+                                                    <span class="method-badge method-${ep.method.toLowerCase()}">${ep.method}</span>
+                                                    <span class="endpoint-path">${ep.path}</span>
+                                                </div>
+                                                <div class="endpoint-description">${ep.desc}</div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                    ${match.capabilities ? `
+                                        <div class="info-box success" style="margin-top: 1rem;">
+                                            <span class="info-icon">✅</span>
+                                            <div class="info-content"><strong>Can Do:</strong> ${match.capabilities.join(', ')}</div>
+                                        </div>
+                                    ` : ''}
+                                    ${match.limitations && match.limitations.length > 0 ? `
+                                        <div class="info-box warning" style="margin-top: 1rem;">
+                                            <span class="info-icon">⚠️</span>
+                                            <div class="info-content"><strong>Limitations:</strong> ${match.limitations.join(', ')}</div>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            });
 
             // Related topics
             if (results.relatedTopics.length > 0) {
