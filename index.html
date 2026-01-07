@@ -583,8 +583,12 @@
                            autocomplete="off">
                 </div>
                 <button class="search-btn" onclick="handleSearch()">
-                    <span>Analyze</span>
+                    <span>Search</span>
                     <span>→</span>
+                </button>
+                <button class="search-btn" onclick="clearSearch()" style="background: var(--bg-dark); border: 1px solid var(--border);">
+                    <span>Clear</span>
+                    <span>✕</span>
                 </button>
             </div>
             <div class="quick-actions">
@@ -1917,6 +1921,17 @@
             const arrow = element.querySelector('span:last-child');
             content.classList.toggle('open');
             arrow.textContent = content.classList.contains('open') ? '▲' : '▼';
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('resultsSection').innerHTML = `
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">💡</div>
+                    <h3>Ask a question about Hubstaff API</h3>
+                    <p>For example: "Can I sync timesheets with an ERP?" or "What authentication methods are supported?"</p>
+                </div>
+            `;
         }
 
         function copyAnswer() {
