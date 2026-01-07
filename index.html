@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hubstaff API Support Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #39b54a;
+            --primary-dark: #2d9340;
+            --bg-dark: #0a0f1a;
+            --bg-card: #111827;
+            --bg-card-hover: #1a2332;
+            --text-primary: #f0f4f8;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+            --accent-yellow: #eab308;
+            --get: #22c55e;
+            --post: #3b82f6;
+            --put: #f97316;
+            --delete: #ef4444;
+            --patch: #a855f7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(ellipse at top, rgba(57, 181, 74, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .search-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            padding-left: 3rem;
+            font-size: 1rem;
+            font-family: inherit;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(57, 181, 74, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-btn {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(57, 181, 74, 0.3);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .quick-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-family: inherit;
+            background: var(--bg-dark);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            border-color: var(--primary);
+        }
+
+        .results-section {
+            margin-bottom: 2rem;
+        }
+
+        .answer-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .answer-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .answer-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(57, 181, 74, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        .answer-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .answer-content {
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .answer-content p {
+            margin-bottom: 1rem;
+        }
+
+        .answer-content strong {
+            color: var(--text-primary);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-supported {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+        }
+
+        .status-indirect {
+            background: rgba(249, 115, 22, 0.15);
+            color: #f97316;
+        }
+
+        .status-unavailable {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .endpoints-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .endpoint-card {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.2s;
+        }
+
+        .endpoint-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .method-badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+        }
+
+        .method-get { background: rgba(34, 197, 94, 0.15); color: var(--get); }
+        .method-post { background: rgba(59, 130, 246, 0.15); color: var(--post); }
+        .method-put { background: rgba(249, 115, 22, 0.15); color: var(--put); }
+        .method-delete { background: rgba(239, 68, 68, 0.15); color: var(--delete); }
+        .method-patch { background: rgba(168, 85, 247, 0.15); color: var(--patch); }
+
+        .endpoint-path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+
+        .endpoint-description {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .category-section {
+            margin-bottom: 2rem;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            padding: 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .category-header:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .category-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-blue);
+        }
+
+        .category-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .category-count {
+            background: var(--bg-dark);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .category-content {
+            display: none;
+            padding-left: 1rem;
+        }
+
+        .category-content.open {
+            display: block;
+        }
+
+        .copy-btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: var(--bg-dark);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .copy-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .info-box.warning {
+            background: rgba(249, 115, 22, 0.1);
+            border-color: rgba(249, 115, 22, 0.2);
+        }
+
+        .info-box.success {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+
+        .info-icon {
+            color: var(--accent-blue);
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .info-box.warning .info-icon {
+            color: var(--accent-orange);
+        }
+
+        .info-box.success .info-icon {
+            color: var(--primary);
+        }
+
+        .info-content {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .knowledge-base {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin-top: 2rem;
+        }
+
+        .kb-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .kb-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+        }
+
+        .kb-content {
+            padding: 1.5rem;
+            display: none;
+        }
+
+        .kb-content.open {
+            display: block;
+        }
+
+        .kb-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .kb-item {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .kb-item-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .kb-item-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .related-topics {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .related-title {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .related-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .related-tag {
+            padding: 0.4rem 0.8rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .related-tag:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            .search-input-wrapper {
+                min-width: 100%;
+            }
+
+            .endpoints-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .kb-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">🔌</div>
+                <h1>Hubstaff API Assistant</h1>
+            </div>
+            <p class="subtitle">Get instant answers about Hubstaff API capabilities for integration questions</p>
+        </header>
+
+        <section class="search-section">
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" id="searchInput" 
+                           placeholder="Ask about Hubstaff API capabilities..." 
+                           autocomplete="off">
+                </div>
+                <button class="search-btn" onclick="handleSearch()">
+                    <span>Analyze</span>
+                    <span>→</span>
+                </button>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-btn" onclick="quickSearch('time tracking sync')">⏱️ Time Tracking</button>
+                <button class="quick-btn" onclick="quickSearch('attendance check-in')">📋 Attendance</button>
+                <button class="quick-btn" onclick="quickSearch('projects tasks')">📁 Projects & Tasks</button>
+                <button class="quick-btn" onclick="quickSearch('screenshots monitoring')">📸 Screenshots</button>
+                <button class="quick-btn" onclick="quickSearch('authentication oauth')">🔐 Authentication</button>
+                <button class="quick-btn" onclick="quickSearch('webhooks')">🔔 Webhooks</button>
+                <button class="quick-btn" onclick="quickSearch('rate limits')">⚡ Rate Limits</button>
+                <button class="quick-btn" onclick="quickSearch('users members')">👥 Users & Teams</button>
+            </div>
+        </section>
+
+        <section class="results-section" id="resultsSection">
+            <div class="empty-state" id="emptyState">
+                <div class="empty-icon">💡</div>
+                <h3>Ask a question about Hubstaff API</h3>
+                <p>For example: "Can I sync timesheets with an ERP?" or "What authentication methods are supported?"</p>
+            </div>
+        </section>
+
+        <div class="knowledge-base">
+            <div class="kb-header" onclick="toggleKnowledgeBase()">
+                <div class="kb-title">
+                    <span>📚</span>
+                    <span>API Knowledge Base Reference</span>
+                </div>
+                <span id="kbToggle">▼</span>
+            </div>
+            <div class="kb-content" id="kbContent">
+                <div class="kb-grid" id="kbGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Comprehensive Hubstaff API Knowledge Base from official documentation
+        const apiKnowledge = {
+            authentication: {
+                title: "Authentication",
+                icon: "🔐",
+                description: "OAuth 2.0, Personal Access Tokens, and App Tokens supported",
+                details: [
+                    "OAuth 2.0 authorization flow for third-party apps",
+                    "Personal Access Tokens (PAT) for direct API access",
+                    "App Tokens for server-to-server integrations",
+                    "Bearer token authentication in headers",
+                    "Token refresh mechanism available"
+                ],
+                planAccess: "Team and Enterprise plans include API access",
+                status: "supported"
+            },
+            activities: {
+                title: "Activities (Time Tracking)",
+                icon: "⏱️",
+                description: "Track work activities, time logs, and productivity metrics",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/activities", desc: "List organization activities" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/activities/updates", desc: "Get activity updates" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/activities/daily", desc: "Get daily activity summaries" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/activities/daily/updates", desc: "Get daily updates" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/last_activities", desc: "Get last activities" },
+                    { method: "GET", path: "/v2/projects/{project_id}/activities", desc: "List project activities" },
+                    { method: "GET", path: "/v2/projects/{project_id}/activities/updates", desc: "Get project activity updates" },
+                    { method: "GET", path: "/v2/projects/{project_id}/activities/daily", desc: "Get project daily activities" },
+                    { method: "GET", path: "/v2/projects/{project_id}/last_activities", desc: "Get project last activities" }
+                ],
+                status: "supported"
+            },
+            timesheets: {
+                title: "Timesheets",
+                icon: "📊",
+                description: "Access timesheet data for payroll and reporting",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/timesheets", desc: "List organization timesheets" }
+                ],
+                details: [
+                    "Contains aggregated time data per user/project",
+                    "Includes tracked time, idle time, and manual time",
+                    "Supports date range filtering",
+                    "Can group by user, project, or date"
+                ],
+                status: "supported"
+            },
+            timeEntries: {
+                title: "Time Entries",
+                icon: "🕐",
+                description: "Individual time entry records with start/stop times",
+                endpoints: [
+                    { method: "GET", path: "/v2/users/{user_id}/time_entries", desc: "List user time entries" }
+                ],
+                details: [
+                    "Individual time tracking records",
+                    "Includes start time, stop time, and duration",
+                    "Links to projects and tasks"
+                ],
+                status: "supported"
+            },
+            attendance: {
+                title: "Attendance",
+                icon: "📋",
+                description: "Attendance schedules, shifts, and check-in/check-out",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/attendance_schedules", desc: "List attendance schedules" },
+                    { method: "POST", path: "/v2/organizations/{organization_id}/attendance_schedules", desc: "Create attendance schedule" },
+                    { method: "PUT", path: "/v2/attendance_schedules/{attendance_schedule_id}", desc: "Update attendance schedule" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/attendance_shifts", desc: "List attendance shifts" }
+                ],
+                details: [
+                    "Attendance is derived from activity tracking (first/last activity times)",
+                    "Attendance schedules define expected work hours",
+                    "Attendance shifts track actual working periods",
+                    "For explicit check-in/check-out: Use Job Sites with geofencing (Locations feature)"
+                ],
+                status: "supported",
+                notes: "Attendance data is derived from time tracking. For explicit check-in/check-out, Job Site Visits API provides geolocation-based attendance."
+            },
+            projects: {
+                title: "Projects",
+                icon: "📁",
+                description: "Full CRUD operations for project management",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/projects", desc: "List organization projects" },
+                    { method: "POST", path: "/v2/organizations/{organization_id}/projects", desc: "Create new project" },
+                    { method: "GET", path: "/v2/projects/{project_id}", desc: "Get project details" },
+                    { method: "PUT", path: "/v2/projects/{project_id}", desc: "Update project" },
+                    { method: "PUT", path: "/v2/projects/{project_id}/update_metadata", desc: "Update project metadata" }
+                ],
+                status: "supported"
+            },
+            tasks: {
+                title: "Tasks",
+                icon: "✅",
+                description: "Full CRUD operations for task management",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/tasks", desc: "List organization tasks" },
+                    { method: "GET", path: "/v2/projects/{project_id}/tasks", desc: "List project tasks" },
+                    { method: "POST", path: "/v2/projects/{project_id}/tasks", desc: "Create task in project" },
+                    { method: "GET", path: "/v2/tasks/{task_id}", desc: "Get task details" },
+                    { method: "PUT", path: "/v2/tasks/{task_id}", desc: "Update task" },
+                    { method: "DELETE", path: "/v2/tasks/{task_id}", desc: "Delete task" },
+                    { method: "PUT", path: "/v2/tasks/{task_id}/update_metadata", desc: "Update task metadata" },
+                    { method: "GET", path: "/v2/integrations/{integration_id}/tasks", desc: "List integration tasks" }
+                ],
+                status: "supported"
+            },
+            users: {
+                title: "Users",
+                icon: "👤",
+                description: "User profile and information access",
+                endpoints: [
+                    { method: "GET", path: "/v2/users/me", desc: "Get current user profile" },
+                    { method: "GET", path: "/v2/users/{user_id}", desc: "Get user by ID" }
+                ],
+                status: "supported"
+            },
+            members: {
+                title: "Members (Organization/Team)",
+                icon: "👥",
+                description: "Manage organization and team membership",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/members", desc: "List organization members" },
+                    { method: "POST", path: "/v2/organizations/{organization_id}/members", desc: "Add organization member" },
+                    { method: "PUT", path: "/v2/organizations/{organization_id}/update_members", desc: "Update organization members" },
+                    { method: "GET", path: "/v2/projects/{project_id}/members", desc: "List project members" },
+                    { method: "PUT", path: "/v2/projects/{project_id}/update_members", desc: "Update project members" },
+                    { method: "GET", path: "/v2/teams/{team_id}/members", desc: "List team members" },
+                    { method: "PUT", path: "/v2/teams/{team_id}/update_members", desc: "Update team members" }
+                ],
+                status: "supported"
+            },
+            teams: {
+                title: "Teams",
+                icon: "🏢",
+                description: "Team management and organization",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/teams", desc: "List organization teams" },
+                    { method: "POST", path: "/v2/organizations/{organization_id}/teams", desc: "Create team" },
+                    { method: "GET", path: "/v2/teams/{team_id}", desc: "Get team details" },
+                    { method: "PUT", path: "/v2/teams/{team_id}", desc: "Update team" },
+                    { method: "DELETE", path: "/v2/teams/{team_id}", desc: "Delete team" },
+                    { method: "GET", path: "/v2/teams/{team_id}/projects", desc: "List team projects" },
+                    { method: "PUT", path: "/v2/teams/{team_id}/update_projects", desc: "Update team projects" },
+                    { method: "PUT", path: "/v2/teams/{team_id}/update_metadata", desc: "Update team metadata" }
+                ],
+                status: "supported"
+            },
+            organizations: {
+                title: "Organizations",
+                icon: "🏛️",
+                description: "Organization-level settings and data",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations", desc: "List organizations" },
+                    { method: "POST", path: "/v2/organizations", desc: "Create organization" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}", desc: "Get organization details" },
+                    { method: "PUT", path: "/v2/organizations/{organization_id}/update_metadata", desc: "Update organization metadata" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/work_break_projects", desc: "Get work break projects" }
+                ],
+                status: "supported"
+            },
+            screenshots: {
+                title: "Screenshots",
+                icon: "📸",
+                description: "Access captured screenshots for monitoring",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/screenshots", desc: "List organization screenshots" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/screenshots/{screenshot_id}", desc: "Get screenshot details" },
+                    { method: "GET", path: "/v2/projects/{project_id}/screenshots", desc: "List project screenshots" },
+                    { method: "GET", path: "/v2/projects/{project_id}/screenshots/{screenshot_id}", desc: "Get project screenshot" }
+                ],
+                status: "supported"
+            },
+            jobSites: {
+                title: "Job Sites (Locations/Geofencing)",
+                icon: "📍",
+                description: "Geolocation-based job sites for field tracking",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/job_sites", desc: "List job sites" },
+                    { method: "POST", path: "/v2/organizations/{organization_id}/job_sites", desc: "Create job site" },
+                    { method: "GET", path: "/v2/job_sites/{job_site_id}", desc: "Get job site details" },
+                    { method: "PUT", path: "/v2/job_sites/{job_site_id}", desc: "Update job site" },
+                    { method: "PUT", path: "/v2/job_sites/{job_site_id}/update_rules", desc: "Update geofence rules" },
+                    { method: "PUT", path: "/v2/job_sites/{job_site_id}/add_rules", desc: "Add geofence rules" },
+                    { method: "PUT", path: "/v2/job_sites/{job_site_id}/remove_rules", desc: "Remove geofence rules" }
+                ],
+                status: "supported"
+            },
+            jobSiteVisits: {
+                title: "Job Site Visits (Check-in/Check-out)",
+                icon: "🚶",
+                description: "Track arrivals and departures at job sites",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/job_site_visits", desc: "List job site visits" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/passive_job_site_visits", desc: "List passive visits" }
+                ],
+                details: [
+                    "Provides explicit check-in/check-out data via geofencing",
+                    "Records arrival and departure times at defined locations",
+                    "Ideal for field service attendance tracking"
+                ],
+                status: "supported"
+            },
+            locations: {
+                title: "Locations",
+                icon: "🗺️",
+                description: "GPS location tracking data",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/locations", desc: "List organization locations" },
+                    { method: "GET", path: "/v2/projects/{project_id}/locations", desc: "List project locations" }
+                ],
+                status: "supported"
+            },
+            webhooks: {
+                title: "Webhooks",
+                icon: "🔔",
+                description: "Real-time event notifications",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/webhooks", desc: "List organization webhooks" },
+                    { method: "POST", path: "/v2/organizations/{organization_id}/webhooks", desc: "Create webhook" },
+                    { method: "GET", path: "/v2/projects/{project_id}/webhooks", desc: "List project webhooks" },
+                    { method: "GET", path: "/v2/users/me/webhooks", desc: "List user webhooks" },
+                    { method: "GET", path: "/v2/webhooks/{webhook_id}", desc: "Get webhook details" },
+                    { method: "DELETE", path: "/v2/webhooks/{webhook_id}", desc: "Delete webhook" },
+                    { method: "POST", path: "/v2/webhooks/{webhook_id}/activate", desc: "Activate webhook" }
+                ],
+                details: [
+                    "Supported events: time_entry, activity, screenshot, project, task, user updates",
+                    "Requires endpoint verification after creation",
+                    "POST request sent to your URL with x-hs-verification header"
+                ],
+                status: "supported"
+            },
+            clients: {
+                title: "Clients",
+                icon: "🤝",
+                description: "Client/customer management",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/clients", desc: "List clients" },
+                    { method: "POST", path: "/v2/organizations/{organization_id}/clients", desc: "Create client" },
+                    { method: "GET", path: "/v2/clients/{client_id}", desc: "Get client details" },
+                    { method: "PUT", path: "/v2/clients/{client_id}", desc: "Update client" },
+                    { method: "PUT", path: "/v2/clients/{client_id}/update_metadata", desc: "Update client metadata" }
+                ],
+                status: "supported"
+            },
+            invites: {
+                title: "Invites",
+                icon: "✉️",
+                description: "Manage team invitations",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/invites", desc: "List invites" },
+                    { method: "POST", path: "/v2/organizations/{organization_id}/invites", desc: "Create invite" },
+                    { method: "POST", path: "/v2/organizations/{organization_id}/invites/bulk", desc: "Bulk create invites" },
+                    { method: "GET", path: "/v2/invites/{invite_id}", desc: "Get invite details" },
+                    { method: "PUT", path: "/v2/invites/{invite_id}", desc: "Update invite" },
+                    { method: "DELETE", path: "/v2/invites/{invite_id}", desc: "Delete invite" }
+                ],
+                status: "supported"
+            },
+            notes: {
+                title: "Notes",
+                icon: "📝",
+                description: "User and project notes",
+                endpoints: [
+                    { method: "GET", path: "/v2/notes/{note_id}", desc: "Get note" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/notes", desc: "List organization notes" },
+                    { method: "GET", path: "/v2/projects/{project_id}/notes", desc: "List project notes" }
+                ],
+                status: "supported"
+            },
+            rates: {
+                title: "Rates (Billing)",
+                icon: "💰",
+                description: "Billing rates for users and projects",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/rates", desc: "List rates" }
+                ],
+                status: "supported"
+            },
+            invoices: {
+                title: "Invoices",
+                icon: "🧾",
+                description: "Client and team invoicing",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/client_invoices", desc: "List client invoices" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/team_invoices", desc: "List team invoices" }
+                ],
+                status: "supported"
+            },
+            payments: {
+                title: "Payments",
+                icon: "💳",
+                description: "Team payment records",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/team_payments", desc: "List team payments" },
+                    { method: "GET", path: "/v2/team_payments/{team_payment_id}", desc: "Get payment details" }
+                ],
+                status: "supported"
+            },
+            toolUsages: {
+                title: "Tool/App Usage",
+                icon: "🖥️",
+                description: "Application and website usage tracking",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/tool_usages", desc: "List tool usages" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/tool_usages/daily", desc: "Daily tool usage" },
+                    { method: "GET", path: "/v2/projects/{project_id}/tool_usages", desc: "Project tool usages" },
+                    { method: "GET", path: "/v2/projects/{project_id}/tool_usages/daily", desc: "Project daily tool usage" }
+                ],
+                status: "supported"
+            },
+            timeOff: {
+                title: "Time Off",
+                icon: "🏖️",
+                description: "Leave/PTO management",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/time_off_policies", desc: "List time off policies" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/time_off_requests", desc: "List time off requests" }
+                ],
+                status: "supported"
+            },
+            holidays: {
+                title: "Holidays",
+                icon: "🎄",
+                description: "Organization holiday schedules",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/holidays", desc: "List holidays" }
+                ],
+                status: "supported"
+            },
+            budgets: {
+                title: "Budgets",
+                icon: "📈",
+                description: "Project and client budget tracking",
+                endpoints: [
+                    { method: "GET", path: "/v2/budget_histories/{budget_history_id}", desc: "Get budget history" },
+                    { method: "GET", path: "/v2/clients/{client_id}/budget_histories", desc: "Client budget histories" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/budget_histories", desc: "Organization budget histories" },
+                    { method: "GET", path: "/v2/projects/{project_id}/budget_histories", desc: "Project budget histories" }
+                ],
+                status: "supported"
+            },
+            limits: {
+                title: "Limits",
+                icon: "⏰",
+                description: "Work hour limits and tracking",
+                endpoints: [
+                    { method: "GET", path: "/v2/limit_histories/{limit_history_id}", desc: "Get limit history" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/limit_histories", desc: "List limit histories" }
+                ],
+                status: "supported"
+            },
+            integrations: {
+                title: "Integrations",
+                icon: "🔗",
+                description: "Third-party integrations management",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/integrations", desc: "List integrations" },
+                    { method: "GET", path: "/v2/integrations/{integration_id}/project_links", desc: "Integration project links" },
+                    { method: "GET", path: "/v2/integrations/{integration_id}/user_links", desc: "Integration user links" },
+                    { method: "GET", path: "/v2/projects/{project_id}/integration_links", desc: "Project integration links" }
+                ],
+                status: "supported"
+            },
+            timeEditLogs: {
+                title: "Time Edit Logs",
+                icon: "📜",
+                description: "Audit trail for time modifications",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/time_edit_logs", desc: "Organization time edit logs" },
+                    { method: "GET", path: "/v2/projects/{project_id}/time_edit_logs", desc: "Project time edit logs" }
+                ],
+                status: "supported"
+            },
+            insights: {
+                title: "Insights & Smart Notifications",
+                icon: "🔮",
+                description: "Productivity insights and alerts",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/insights/smart_notification_rules", desc: "List notification rules" },
+                    { method: "POST", path: "/v2/organizations/{organization_id}/insights/smart_notification_rules", desc: "Create rule" },
+                    { method: "GET", path: "/v2/insights/smart_notification_rules/{rule_id}", desc: "Get rule" },
+                    { method: "PUT", path: "/v2/insights/smart_notification_rules/{rule_id}", desc: "Update rule" },
+                    { method: "DELETE", path: "/v2/insights/smart_notification_rules/{rule_id}", desc: "Delete rule" },
+                    { method: "POST", path: "/v2/insights/smart_notification_rules/{rule_id}/toggle_status", desc: "Toggle rule status" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/insights/smart_notifications", desc: "List notifications" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/insights/unusual_activities", desc: "Unusual activities" }
+                ],
+                status: "supported"
+            },
+            globalTodos: {
+                title: "Global To-Do's",
+                icon: "📌",
+                description: "Organization-wide to-do items",
+                endpoints: [
+                    { method: "GET", path: "/v2/organizations/{organization_id}/global_todos", desc: "List global to-dos" },
+                    { method: "POST", path: "/v2/organizations/{organization_id}/global_todos", desc: "Create global to-do" },
+                    { method: "GET", path: "/v2/organizations/{organization_id}/global_todos/{id}", desc: "Get global to-do" },
+                    { method: "PUT", path: "/v2/organizations/{organization_id}/global_todos/{id}", desc: "Update global to-do" }
+                ],
+                status: "supported"
+            },
+            errorCodes: {
+                title: "Error Codes",
+                icon: "⚠️",
+                description: "API error code reference",
+                endpoints: [
+                    { method: "GET", path: "/v2/error_codes", desc: "List all error codes" }
+                ],
+                status: "supported"
+            },
+            rateLimits: {
+                title: "Rate Limits",
+                icon: "⚡",
+                description: "API request rate limiting",
+                details: [
+                    "350 requests per minute per token",
+                    "Rate limit headers: X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset",
+                    "429 Too Many Requests returned when exceeded",
+                    "Use exponential backoff for retries"
+                ],
+                status: "info"
+            },
+            plans: {
+                title: "API Plan Access",
+                icon: "📋",
+                description: "Which Hubstaff plans include API access",
+                details: [
+                    "Starter: Limited/No API access",
+                    "Team: Full API access included",
+                    "Enterprise: Full API access with higher limits",
+                    "API tokens managed in organization settings"
+                ],
+                status: "info"
+            }
+        };
+
+        function renderKnowledgeBase() {
+            const grid = document.getElementById('kbGrid');
+            grid.innerHTML = Object.entries(apiKnowledge).map(([key, item]) => `
+                <div class="kb-item" onclick="quickSearch('${item.title.toLowerCase()}')">
+                    <div class="kb-item-title">
+                        <span>${item.icon}</span>
+                        <span>${item.title}</span>
+                    </div>
+                    <div class="kb-item-desc">${item.description}</div>
+                </div>
+            `).join('');
+        }
+
+        function toggleKnowledgeBase() {
+            const content = document.getElementById('kbContent');
+            const toggle = document.getElementById('kbToggle');
+            content.classList.toggle('open');
+            toggle.textContent = content.classList.contains('open') ? '▲' : '▼';
+        }
+
+        function quickSearch(query) {
+            document.getElementById('searchInput').value = query;
+            handleSearch();
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            if (!query.trim()) return;
+
+            const results = analyzeQuery(query);
+            displayResults(results, query);
+        }
+
+        function analyzeQuery(query) {
+            const results = {
+                matches: [],
+                summary: "",
+                relatedTopics: []
+            };
+
+            // Keyword mapping for better matching
+            const keywordMap = {
+                'timesheet': ['timesheets', 'activities', 'timeEntries'],
+                'time': ['timesheets', 'activities', 'timeEntries', 'timeEditLogs'],
+                'tracking': ['activities', 'timesheets', 'screenshots', 'toolUsages'],
+                'attendance': ['attendance', 'jobSiteVisits', 'jobSites'],
+                'check-in': ['jobSiteVisits', 'attendance'],
+                'check-out': ['jobSiteVisits', 'attendance'],
+                'checkin': ['jobSiteVisits', 'attendance'],
+                'checkout': ['jobSiteVisits', 'attendance'],
+                'project': ['projects', 'tasks'],
+                'task': ['tasks', 'globalTodos'],
+                'user': ['users', 'members'],
+                'member': ['members', 'teams', 'invites'],
+                'team': ['teams', 'members'],
+                'screenshot': ['screenshots'],
+                'location': ['locations', 'jobSites', 'jobSiteVisits'],
+                'gps': ['locations', 'jobSites'],
+                'geofence': ['jobSites', 'jobSiteVisits'],
+                'webhook': ['webhooks'],
+                'notification': ['webhooks', 'insights'],
+                'auth': ['authentication'],
+                'oauth': ['authentication'],
+                'token': ['authentication'],
+                'rate': ['rateLimits', 'rates'],
+                'limit': ['rateLimits', 'limits'],
+                'erp': ['timesheets', 'activities', 'projects', 'tasks', 'users'],
+                'sync': ['timesheets', 'activities', 'webhooks', 'projects', 'tasks'],
+                'integration': ['integrations', 'webhooks'],
+                'odoo': ['timesheets', 'activities', 'projects', 'attendance'],
+                'payroll': ['timesheets', 'payments', 'invoices'],
+                'invoice': ['invoices', 'payments'],
+                'payment': ['payments', 'invoices'],
+                'budget': ['budgets', 'rates'],
+                'client': ['clients', 'invoices'],
+                'report': ['activities', 'timesheets', 'screenshots'],
+                'plan': ['plans', 'rateLimits'],
+                'pricing': ['plans'],
+                'monitor': ['screenshots', 'toolUsages', 'insights'],
+                'app': ['toolUsages'],
+                'website': ['toolUsages'],
+                'holiday': ['holidays', 'timeOff'],
+                'leave': ['timeOff', 'holidays'],
+                'pto': ['timeOff'],
+                'vacation': ['timeOff', 'holidays']
+            };
+
+            // Find matching categories
+            const matchedCategories = new Set();
+            
+            Object.entries(keywordMap).forEach(([keyword, categories]) => {
+                if (query.includes(keyword)) {
+                    categories.forEach(cat => matchedCategories.add(cat));
+                }
+            });
+
+            // Also do direct matching on category names
+            Object.keys(apiKnowledge).forEach(key => {
+                const item = apiKnowledge[key];
+                if (item.title.toLowerCase().includes(query) || 
+                    item.description.toLowerCase().includes(query) ||
+                    query.includes(item.title.toLowerCase())) {
+                    matchedCategories.add(key);
+                }
+            });
+
+            // If no matches, show general info
+            if (matchedCategories.size === 0) {
+                matchedCategories.add('authentication');
+                matchedCategories.add('rateLimits');
+                matchedCategories.add('plans');
+            }
+
+            matchedCategories.forEach(cat => {
+                if (apiKnowledge[cat]) {
+                    results.matches.push(apiKnowledge[cat]);
+                }
+            });
+
+            // Generate summary based on query
+            results.summary = generateSummary(query, results.matches);
+            results.relatedTopics = getRelatedTopics(matchedCategories);
+
+            return results;
+        }
+
+        function generateSummary(query, matches) {
+            let summary = "";
+
+            // ERP/Odoo integration query
+            if (query.includes('erp') || query.includes('odoo') || query.includes('integration')) {
+                summary = `<p><strong>Yes, the Hubstaff API is available for third-party ERP integrations</strong> like Odoo.</p>
+                <div class="info-box success">
+                    <span class="info-icon">✅</span>
+                    <div class="info-content">
+                        <strong>API Access Plans:</strong> Team and Enterprise plans include full API access. Starter plans have limited or no API access.
+                    </div>
+                </div>
+                <p><strong>What you can sync:</strong></p>
+                <ul style="color: var(--text-secondary); margin-left: 1.5rem; line-height: 2;">
+                    <li><span class="status-badge status-supported">✓ Supported</span> <strong>Timesheets & Work Hours</strong> - Full access via /v2/timesheets and /v2/activities endpoints</li>
+                    <li><span class="status-badge status-supported">✓ Supported</span> <strong>Projects & Tasks</strong> - Full CRUD operations available</li>
+                    <li><span class="status-badge status-supported">✓ Supported</span> <strong>Users & Members</strong> - Read access to user data</li>
+                    <li><span class="status-badge status-indirect">~ Indirect</span> <strong>Attendance</strong> - Derived from activity start/stop times. For explicit check-in/check-out, use Job Site Visits API with geofencing.</li>
+                </ul>
+                <div class="info-box warning">
+                    <span class="info-icon">⚠️</span>
+                    <div class="info-content">
+                        <strong>Rate Limit:</strong> 350 requests per minute. Use X-RateLimit headers to track usage.
+                    </div>
+                </div>`;
+            }
+            // Attendance query
+            else if (query.includes('attendance') || query.includes('check-in') || query.includes('check-out') || query.includes('checkin') || query.includes('checkout')) {
+                summary = `<p><strong>Attendance tracking in Hubstaff works in two ways:</strong></p>
+                <div class="info-box success">
+                    <span class="info-icon">✅</span>
+                    <div class="info-content">
+                        <strong>Option 1 - Activity-Based:</strong> Attendance is derived from the first and last activity timestamps each day. Use the Activities API to get this data.
+                    </div>
+                </div>
+                <div class="info-box success">
+                    <span class="info-icon">✅</span>
+                    <div class="info-content">
+                        <strong>Option 2 - Job Site Visits (Geofencing):</strong> For explicit check-in/check-out, use the Job Sites and Job Site Visits APIs. This provides GPS-based arrival/departure tracking at defined locations.
+                    </div>
+                </div>
+                <p>The <strong>Attendance Schedules API</strong> lets you define expected work hours, and <strong>Attendance Shifts</strong> track actual working periods.</p>`;
+            }
+            // Time tracking query
+            else if (query.includes('time') || query.includes('tracking') || query.includes('timesheet')) {
+                summary = `<p><strong>Hubstaff provides comprehensive time tracking data via the API:</strong></p>
+                <ul style="color: var(--text-secondary); margin-left: 1.5rem; line-height: 2;">
+                    <li><strong>Activities</strong> - Granular time tracking with keyboard/mouse activity levels</li>
+                    <li><strong>Timesheets</strong> - Aggregated time data for reporting and payroll</li>
+                    <li><strong>Time Entries</strong> - Individual start/stop time records</li>
+                    <li><strong>Daily Summaries</strong> - Pre-aggregated daily totals</li>
+                </ul>
+                <p>All endpoints support date range filtering and can be scoped by organization or project.</p>`;
+            }
+            // Webhooks query
+            else if (query.includes('webhook') || query.includes('notification') || query.includes('real-time')) {
+                summary = `<p><strong>Webhooks enable real-time event notifications:</strong></p>
+                <div class="info-box success">
+                    <span class="info-icon">✅</span>
+                    <div class="info-content">
+                        Create webhooks at organization, project, or user level. Events include time entries, activities, screenshots, project/task changes, and user updates.
+                    </div>
+                </div>
+                <p><strong>Setup process:</strong></p>
+                <ol style="color: var(--text-secondary); margin-left: 1.5rem; line-height: 2;">
+                    <li>POST to /v2/organizations/{org_id}/webhooks with your endpoint URL</li>
+                    <li>Hubstaff sends a verification POST with x-hs-verification header</li>
+                    <li>Return the verification token to confirm</li>
+                    <li>Activate the webhook via /v2/webhooks/{id}/activate</li>
+                </ol>`;
+            }
+            // Authentication query
+            else if (query.includes('auth') || query.includes('oauth') || query.includes('token')) {
+                summary = `<p><strong>Hubstaff supports multiple authentication methods:</strong></p>
+                <ul style="color: var(--text-secondary); margin-left: 1.5rem; line-height: 2;">
+                    <li><strong>OAuth 2.0</strong> - For third-party applications requiring user authorization</li>
+                    <li><strong>Personal Access Tokens (PAT)</strong> - For direct API access by account owners</li>
+                    <li><strong>App Tokens</strong> - For server-to-server integrations</li>
+                </ul>
+                <p>All requests require a Bearer token in the Authorization header.</p>`;
+            }
+            // Rate limits query
+            else if (query.includes('rate') || query.includes('limit')) {
+                summary = `<p><strong>API Rate Limiting:</strong></p>
+                <div class="info-box warning">
+                    <span class="info-icon">⚡</span>
+                    <div class="info-content">
+                        <strong>350 requests per minute</strong> per authentication token
+                    </div>
+                </div>
+                <p>Monitor your usage with response headers:</p>
+                <ul style="color: var(--text-secondary); margin-left: 1.5rem; line-height: 2;">
+                    <li><code style="background: var(--bg-dark); padding: 2px 6px; border-radius: 4px;">X-RateLimit-Limit</code> - Maximum requests allowed</li>
+                    <li><code style="background: var(--bg-dark); padding: 2px 6px; border-radius: 4px;">X-RateLimit-Remaining</code> - Requests remaining in window</li>
+                    <li><code style="background: var(--bg-dark); padding: 2px 6px; border-radius: 4px;">X-RateLimit-Reset</code> - Timestamp when limit resets</li>
+                </ul>
+                <p>Use exponential backoff when receiving 429 Too Many Requests responses.</p>`;
+            }
+            // Plan/pricing query
+            else if (query.includes('plan') || query.includes('pricing') || query.includes('subscription')) {
+                summary = `<p><strong>API Access by Plan:</strong></p>
+                <ul style="color: var(--text-secondary); margin-left: 1.5rem; line-height: 2;">
+                    <li><span class="status-badge status-unavailable">✗</span> <strong>Starter</strong> - Limited or no API access</li>
+                    <li><span class="status-badge status-supported">✓</span> <strong>Team</strong> - Full API access included</li>
+                    <li><span class="status-badge status-supported">✓</span> <strong>Enterprise</strong> - Full API access with potential for higher rate limits</li>
+                </ul>
+                <p>API tokens are managed in the organization settings by account administrators.</p>`;
+            }
+            // Default summary
+            else {
+                summary = `<p>Based on your query, here are the relevant Hubstaff API capabilities:</p>`;
+                if (matches.length > 0) {
+                    summary += `<p>Found <strong>${matches.length} relevant API categories</strong> that may help with your integration.</p>`;
+                }
+            }
+
+            return summary;
+        }
+
+        function getRelatedTopics(matchedCategories) {
+            const allTopics = Object.keys(apiKnowledge).filter(k => !matchedCategories.has(k));
+            return allTopics.slice(0, 6).map(k => apiKnowledge[k].title);
+        }
+
+        function displayResults(results, query) {
+            const section = document.getElementById('resultsSection');
+            document.getElementById('emptyState').style.display = 'none';
+
+            let html = `
+                <div class="answer-card">
+                    <div class="answer-header">
+                        <div class="answer-icon">💡</div>
+                        <div class="answer-title">API Capability Analysis</div>
+                    </div>
+                    <div class="answer-content">
+                        ${results.summary}
+                    </div>
+                    <button class="copy-btn" onclick="copyAnswer()">
+                        <span>📋</span>
+                        <span>Copy Response</span>
+                    </button>
+                </div>
+            `;
+
+            // Show matched endpoints
+            if (results.matches.length > 0) {
+                results.matches.forEach(match => {
+                    if (match.endpoints && match.endpoints.length > 0) {
+                        html += `
+                            <div class="category-section">
+                                <div class="category-header" onclick="toggleCategory(this)">
+                                    <div class="category-icon">${match.icon}</div>
+                                    <div class="category-title">${match.title}</div>
+                                    <div class="category-count">${match.endpoints.length} endpoints</div>
+                                    <span>▼</span>
+                                </div>
+                                <div class="category-content">
+                                    <div class="endpoints-grid">
+                                        ${match.endpoints.map(ep => `
+                                            <div class="endpoint-card">
+                                                <div class="endpoint-header">
+                                                    <span class="method-badge method-${ep.method.toLowerCase()}">${ep.method}</span>
+                                                    <span class="endpoint-path">${ep.path}</span>
+                                                </div>
+                                                <div class="endpoint-description">${ep.desc}</div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                    ${match.details ? `
+                                        <div class="info-box" style="margin-top: 1rem;">
+                                            <span class="info-icon">ℹ️</span>
+                                            <div class="info-content">
+                                                ${match.details.map(d => `<div>• ${d}</div>`).join('')}
+                                            </div>
+                                        </div>
+                                    ` : ''}
+                                    ${match.notes ? `
+                                        <div class="info-box warning" style="margin-top: 1rem;">
+                                            <span class="info-icon">💡</span>
+                                            <div class="info-content">${match.notes}</div>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    } else if (match.details) {
+                        html += `
+                            <div class="category-section">
+                                <div class="category-header" onclick="toggleCategory(this)">
+                                    <div class="category-icon">${match.icon}</div>
+                                    <div class="category-title">${match.title}</div>
+                                    <span>▼</span>
+                                </div>
+                                <div class="category-content">
+                                    <div class="info-box">
+                                        <span class="info-icon">ℹ️</span>
+                                        <div class="info-content">
+                                            ${match.details.map(d => `<div>• ${d}</div>`).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+
+            // Related topics
+            if (results.relatedTopics.length > 0) {
+                html += `
+                    <div class="related-topics">
+                        <div class="related-title">Related topics you might find useful:</div>
+                        <div class="related-tags">
+                            ${results.relatedTopics.map(topic => `
+                                <span class="related-tag" onclick="quickSearch('${topic.toLowerCase()}')">${topic}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            section.innerHTML = html;
+        }
+
+        function toggleCategory(element) {
+            const content = element.nextElementSibling;
+            const arrow = element.querySelector('span:last-child');
+            content.classList.toggle('open');
+            arrow.textContent = content.classList.contains('open') ? '▲' : '▼';
+        }
+
+        function copyAnswer() {
+            const answerContent = document.querySelector('.answer-content');
+            const text = answerContent.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector('.copy-btn span:last-child');
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = 'Copy Response';
+                }, 2000);
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderKnowledgeBase();
+            
+            // Enter key handler
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
