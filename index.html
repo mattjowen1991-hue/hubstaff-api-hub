@@ -1349,8 +1349,145 @@
             return results;
         }
 
+        function checkCanDo(query) {
+            // Normalize the query
+            const q = query.toLowerCase();
+            
+            // Define capabilities with clear YES/NO answers
+            const capabilities = {
+                // Main API - YES capabilities
+                'create project': { answer: 'YES', api: 'Main API', endpoint: 'POST /v2/organizations/{org_id}/projects', note: 'Full CRUD supported for projects' },
+                'update project': { answer: 'YES', api: 'Main API', endpoint: 'PUT /v2/projects/{project_id}', note: 'Can update name, description, status' },
+                'delete project': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Projects cannot be deleted via API - archive instead' },
+                'create task': { answer: 'YES', api: 'Main API', endpoint: 'POST /v2/projects/{project_id}/tasks', note: 'Full CRUD supported for tasks' },
+                'update task': { answer: 'YES', api: 'Main API', endpoint: 'PUT /v2/tasks/{task_id}', note: 'Can update all task fields' },
+                'delete task': { answer: 'YES', api: 'Main API', endpoint: 'DELETE /v2/tasks/{task_id}', note: 'Tasks can be deleted' },
+                'get timesheet': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/timesheets', note: 'Read-only access to aggregated time data' },
+                'create timesheet': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Timesheets are generated from tracked time - cannot create directly' },
+                'edit time': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Time entries cannot be created/edited via API - only read' },
+                'get screenshot': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/screenshots', note: 'Can retrieve screenshot URLs and metadata' },
+                'delete screenshot': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Screenshots cannot be deleted via API' },
+                'create webhook': { answer: 'YES', api: 'Main API', endpoint: 'POST /v2/organizations/{org_id}/webhooks', note: 'Supports real-time notifications' },
+                'delete webhook': { answer: 'YES', api: 'Main API', endpoint: 'DELETE /v2/webhooks/{webhook_id}', note: 'Webhooks can be removed' },
+                'create team': { answer: 'YES', api: 'Main API', endpoint: 'POST /v2/organizations/{org_id}/teams', note: 'Full CRUD for teams' },
+                'delete team': { answer: 'YES', api: 'Main API', endpoint: 'DELETE /v2/teams/{team_id}', note: 'Teams can be deleted' },
+                'create user': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Use Invites API to add users - POST /v2/organizations/{org_id}/invites' },
+                'invite user': { answer: 'YES', api: 'Main API', endpoint: 'POST /v2/organizations/{org_id}/invites', note: 'Can send invites, including bulk invites' },
+                'remove user': { answer: 'YES', api: 'Main API', endpoint: 'PUT /v2/organizations/{org_id}/update_members', note: 'Update member status to remove' },
+                'create client': { answer: 'YES', api: 'Main API', endpoint: 'POST /v2/organizations/{org_id}/clients', note: 'Can create and update clients' },
+                'delete client': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Clients cannot be deleted via API' },
+                'get attendance': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/attendance_shifts', note: 'Attendance derived from activity times' },
+                'check in': { answer: 'INDIRECT', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/job_site_visits', note: 'Use Job Site Visits for GPS-based check-in/out' },
+                'check out': { answer: 'INDIRECT', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/job_site_visits', note: 'Use Job Site Visits for GPS-based check-in/out' },
+                'create job site': { answer: 'YES', api: 'Main API', endpoint: 'POST /v2/organizations/{org_id}/job_sites', note: 'Can create geofenced locations' },
+                'get location': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/locations', note: 'GPS location data available' },
+                'track location': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/locations', note: 'GPS tracking data from mobile app' },
+                'get activity': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/activities', note: 'Full activity data with productivity metrics' },
+                'get time off': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/time_off_requests', note: 'Read-only access to PTO data' },
+                'create time off': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Time off requests managed in Hubstaff UI only' },
+                'get invoice': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/client_invoices', note: 'Read-only access to invoices' },
+                'create invoice': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Invoices created in Hubstaff UI only' },
+                'sync payroll': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/timesheets', note: 'Export timesheet data for payroll systems' },
+                'integrate erp': { answer: 'YES', api: 'Main API', endpoint: 'Multiple endpoints', note: 'Full API access on Team/Enterprise plans' },
+                'integrate odoo': { answer: 'YES', api: 'Main API', endpoint: 'Multiple endpoints', note: 'Timesheets, projects, tasks all accessible' },
+
+                // Tasks API capabilities
+                'create task tasks api': { answer: 'YES', api: 'Tasks API', endpoint: 'POST /v1/lists/{list_id}/tasks', note: 'Create tasks in lists' },
+                'complete task': { answer: 'YES', api: 'Tasks API', endpoint: 'PATCH /v1/tasks/{task_id}/complete', note: 'Mark tasks as complete' },
+                'delete task tasks api': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Tasks cannot be deleted via Tasks API' },
+                'add comment': { answer: 'YES', api: 'Tasks API', endpoint: 'POST /v1/tasks/{task_id}/comments', note: 'Can add comments to tasks' },
+                'delete comment': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Comments cannot be edited or deleted via API' },
+                'create checklist': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Checklists are read-only via API' },
+                'view checklist': { answer: 'YES', api: 'Tasks API', endpoint: 'GET /v1/tasks/{task_id}/checklists', note: 'Can view checklists and items' },
+                'create folder': { answer: 'YES', api: 'Tasks API', endpoint: 'POST /v1/organizations/{org_id}/folders', note: 'Can create folders' },
+                'delete folder': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Folders cannot be deleted via API' },
+                'create label': { answer: 'YES', api: 'Tasks API', endpoint: 'POST /v1/projects/{project_id}/labels', note: 'Can create labels' },
+                'delete label': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Labels cannot be deleted via API' },
+                'create list': { answer: 'YES', api: 'Tasks API', endpoint: 'POST /v1/projects/{project_id}/lists', note: 'Can create Kanban lists' },
+                'delete list': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Lists cannot be deleted via API' },
+                'log time': { answer: 'YES', api: 'Tasks API', endpoint: 'POST /v1/tasks/{task_id}/time_entries', note: 'Can log time to tasks' },
+                'delete time entry': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Time entries cannot be deleted via Tasks API' },
+                'upload attachment': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Attachments are read-only via API' },
+                'view attachment': { answer: 'YES', api: 'Tasks API', endpoint: 'GET /v1/tasks/{task_id}/attachments', note: 'Can view attachment list' },
+                'assign task': { answer: 'YES', api: 'Tasks API', endpoint: 'PATCH /v1/tasks/{task_id}', note: 'Update task to change assignee' },
+                'get assigned tasks': { answer: 'YES', api: 'Tasks API', endpoint: 'GET /v1/tasks/my/assigned', note: 'View tasks assigned to current user' },
+            };
+
+            // Check for matches
+            for (const [key, data] of Object.entries(capabilities)) {
+                if (q.includes(key) || key.split(' ').every(word => q.includes(word))) {
+                    return data;
+                }
+            }
+
+            // Fuzzy matching for common variations
+            const fuzzyMatches = [
+                { patterns: ['create', 'add', 'new', 'make'], subject: 'project', key: 'create project' },
+                { patterns: ['create', 'add', 'new', 'make'], subject: 'task', key: 'create task' },
+                { patterns: ['delete', 'remove', 'destroy'], subject: 'project', key: 'delete project' },
+                { patterns: ['delete', 'remove', 'destroy'], subject: 'task', key: 'delete task' },
+                { patterns: ['edit', 'update', 'modify', 'change'], subject: 'project', key: 'update project' },
+                { patterns: ['edit', 'update', 'modify', 'change'], subject: 'task', key: 'update task' },
+                { patterns: ['get', 'view', 'see', 'read', 'fetch', 'retrieve', 'export'], subject: 'timesheet', key: 'get timesheet' },
+                { patterns: ['get', 'view', 'see', 'read', 'fetch', 'retrieve'], subject: 'screenshot', key: 'get screenshot' },
+                { patterns: ['create', 'add', 'set up', 'setup'], subject: 'webhook', key: 'create webhook' },
+                { patterns: ['invite', 'add'], subject: 'user', key: 'invite user' },
+                { patterns: ['check', 'clock'], subject: 'in', key: 'check in' },
+                { patterns: ['check', 'clock'], subject: 'out', key: 'check out' },
+                { patterns: ['complete', 'finish', 'done', 'close'], subject: 'task', key: 'complete task' },
+                { patterns: ['comment', 'add comment', 'post comment'], subject: 'task', key: 'add comment' },
+                { patterns: ['sync', 'integrate', 'connect', 'export'], subject: 'payroll', key: 'sync payroll' },
+                { patterns: ['sync', 'integrate', 'connect'], subject: 'erp', key: 'integrate erp' },
+                { patterns: ['sync', 'integrate', 'connect'], subject: 'odoo', key: 'integrate odoo' },
+                { patterns: ['track', 'get', 'view'], subject: 'location', key: 'track location' },
+                { patterns: ['track', 'get', 'view'], subject: 'gps', key: 'track location' },
+                { patterns: ['log', 'track', 'add', 'record'], subject: 'time', key: 'log time' },
+                { patterns: ['assign'], subject: 'task', key: 'assign task' },
+            ];
+
+            for (const match of fuzzyMatches) {
+                const hasPattern = match.patterns.some(p => q.includes(p));
+                const hasSubject = q.includes(match.subject);
+                if (hasPattern && hasSubject && capabilities[match.key]) {
+                    return capabilities[match.key];
+                }
+            }
+
+            return null;
+        }
+
         function generateSummary(query, matches) {
             let summary = "";
+
+            // Check for "Can the customer do X?" type questions
+            const isCanQuestion = query.includes('can ') || query.includes('able to') || query.includes('possible') || query.includes('does') || query.includes('is it possible');
+            const canDoResult = checkCanDo(query);
+
+            if (isCanQuestion && canDoResult) {
+                const statusClass = canDoResult.answer === 'YES' ? 'status-supported' : 
+                                   canDoResult.answer === 'NO' ? 'status-unavailable' : 'status-indirect';
+                const statusIcon = canDoResult.answer === 'YES' ? '✅' : 
+                                  canDoResult.answer === 'NO' ? '❌' : '⚠️';
+                const boxClass = canDoResult.answer === 'YES' ? 'success' : 
+                                canDoResult.answer === 'NO' ? 'warning' : 'warning';
+
+                summary = `
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <span class="status-badge ${statusClass}" style="font-size: 1.5rem; padding: 0.75rem 2rem;">
+                            ${statusIcon} ${canDoResult.answer}
+                        </span>
+                    </div>
+                    <div class="info-box ${boxClass}">
+                        <span class="info-icon">${statusIcon}</span>
+                        <div class="info-content">
+                            <strong>API:</strong> ${canDoResult.api}<br>
+                            ${canDoResult.endpoint ? `<strong>Endpoint:</strong> <code style="background: var(--bg-dark); padding: 2px 6px; border-radius: 4px;">${canDoResult.endpoint}</code><br>` : ''}
+                            <strong>Note:</strong> ${canDoResult.note}
+                        </div>
+                    </div>
+                `;
+                return summary;
+            }
 
             // ERP/Odoo integration query
             if (query.includes('erp') || query.includes('odoo') || query.includes('integration')) {
