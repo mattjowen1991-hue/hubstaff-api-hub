@@ -562,6 +562,294 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* =====================================================
+           CAPABILITY STYLES
+           ===================================================== */
+        
+        .capabilities-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cap-section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .cap-section-icon {
+            font-size: 1.25rem;
+        }
+
+        .cap-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .cap-section-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+
+        .capability-card {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.2s;
+        }
+
+        .capability-card:hover {
+            border-color: var(--primary);
+        }
+
+        .cap-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cap-icon {
+            font-size: 1.25rem;
+        }
+
+        .cap-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .cap-description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .cap-badges {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+
+        .cap-badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .cap-yes {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+        }
+
+        .cap-no {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .cap-sync {
+            margin-bottom: 0.75rem;
+        }
+
+        .sync-direction {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .sync-outbound {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+        }
+
+        .sync-inbound {
+            background: rgba(168, 85, 247, 0.15);
+            color: #a855f7;
+        }
+
+        .sync-both {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+        }
+
+        .sync-push {
+            background: rgba(249, 115, 22, 0.15);
+            color: #f97316;
+        }
+
+        .cap-limitations {
+            background: rgba(239, 68, 68, 0.08);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cap-limit-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #ef4444;
+            margin-bottom: 0.35rem;
+        }
+
+        .cap-limitations ul {
+            margin: 0;
+            padding-left: 1.25rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .cap-limitations li {
+            margin-bottom: 0.2rem;
+        }
+
+        .cap-notes {
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .cap-usecases {
+            margin-top: 0.5rem;
+        }
+
+        .cap-usecase-title {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .cap-usecase-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+
+        .usecase-tag {
+            background: var(--bg-card);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        /* Capabilities Matrix */
+        .matrix-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin-top: 2rem;
+            overflow: hidden;
+        }
+
+        .matrix-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .matrix-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+        }
+
+        .matrix-content {
+            padding: 1.5rem;
+            display: none;
+            overflow-x: auto;
+        }
+
+        .matrix-content.open {
+            display: block;
+        }
+
+        .matrix-container {
+            overflow-x: auto;
+        }
+
+        .cap-matrix {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .cap-matrix th {
+            text-align: left;
+            padding: 0.75rem;
+            background: var(--bg-dark);
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .cap-matrix td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cap-matrix tr:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .matrix-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .matrix-yes {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .matrix-no {
+            color: #ef4444;
+        }
+
+        .matrix-sync .sync-direction {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .capabilities-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cap-matrix {
+                font-size: 0.75rem;
+            }
+            
+            .cap-matrix th, .cap-matrix td {
+                padding: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -612,6 +900,17 @@
             </div>
         </section>
 
+        <div class="matrix-section">
+            <div class="matrix-header" onclick="toggleMatrix()">
+                <div class="matrix-title">
+                    <span>🔄</span>
+                    <span>API Data Capabilities Matrix</span>
+                </div>
+                <span id="matrixToggle">▼</span>
+            </div>
+            <div class="matrix-content" id="matrixContent"></div>
+        </div>
+
         <div class="knowledge-base">
             <div class="kb-header" onclick="toggleKnowledgeBase()">
                 <div class="kb-title">
@@ -627,6 +926,248 @@
     </div>
 
     <script>
+        // =====================================================
+        // DATA CAPABILITIES - What can/can't be done via API
+        // =====================================================
+        const dataCapabilities = {
+            timesheets: {
+                name: "Timesheets",
+                icon: "📊",
+                read: true,
+                create: false,
+                update: false,
+                delete: false,
+                syncDirection: "outbound",
+                description: "Aggregated time data for payroll and reporting",
+                limitations: [
+                    "Read-only - timesheets are generated from tracked time",
+                    "Cannot create or modify timesheet entries via API",
+                    "Data must be pulled from Hubstaff, cannot be pushed back"
+                ],
+                useCases: ["Payroll integration", "ERP sync", "Custom reporting", "BI dashboards"],
+                relatedCategories: ["timesheets", "activities"]
+            },
+            timeEntries: {
+                name: "Time Entries",
+                icon: "🕐",
+                read: true,
+                create: true,
+                update: false,
+                delete: false,
+                syncDirection: "both",
+                description: "Individual time tracking records with start/stop times",
+                limitations: [
+                    "Can create new entries but cannot modify existing ones",
+                    "Cannot delete time entries via API",
+                    "Created entries are marked as manual time"
+                ],
+                useCases: ["Import time from external systems", "Bulk time entry creation", "Time logging integrations"],
+                relatedCategories: ["timeEntries"]
+            },
+            activities: {
+                name: "Activities (Tracked Time)",
+                icon: "⏱️",
+                read: true,
+                create: false,
+                update: false,
+                delete: false,
+                syncDirection: "outbound",
+                description: "Detailed activity data with keyboard/mouse metrics",
+                limitations: [
+                    "Read-only - activities are recorded by Hubstaff client",
+                    "Cannot create or modify activity data",
+                    "Includes productivity metrics that can't be manually set"
+                ],
+                useCases: ["Productivity analysis", "Detailed time reporting", "Activity monitoring dashboards"],
+                relatedCategories: ["activities"]
+            },
+            attendance: {
+                name: "Attendance",
+                icon: "📋",
+                read: true,
+                create: false,
+                update: false,
+                delete: false,
+                syncDirection: "outbound",
+                description: "Work schedules and attendance tracking",
+                limitations: [
+                    "Attendance is derived from activity times (first/last activity)",
+                    "Cannot mark attendance directly via API",
+                    "For explicit check-in/out, use Job Site Visits with geofencing"
+                ],
+                useCases: ["HR system integration", "Attendance reporting", "Schedule compliance"],
+                relatedCategories: ["attendance", "jobSiteVisits"],
+                notes: "Two approaches: Activity-based (automatic) or Job Site Visits (GPS-based check-in/out)"
+            },
+            projects: {
+                name: "Projects",
+                icon: "📁",
+                read: true,
+                create: true,
+                update: true,
+                delete: false,
+                syncDirection: "both",
+                description: "Project management with full read/write access",
+                limitations: [
+                    "Cannot delete projects via API (archive instead)",
+                    "Project members managed separately via Members endpoint"
+                ],
+                useCases: ["Project management sync", "Auto-create projects from external system", "Two-way PM integration"],
+                relatedCategories: ["projects"]
+            },
+            tasks: {
+                name: "Tasks",
+                icon: "✅",
+                read: true,
+                create: true,
+                update: true,
+                delete: true,
+                syncDirection: "both",
+                description: "Full CRUD operations for task management",
+                limitations: [
+                    "Tasks must be associated with a project",
+                    "Task assignees managed via update endpoint"
+                ],
+                useCases: ["Task management sync", "Jira/Asana integration", "Auto-task creation", "Two-way task sync"],
+                relatedCategories: ["tasks"]
+            },
+            users: {
+                name: "Users & Members",
+                icon: "👥",
+                read: true,
+                create: false,
+                update: false,
+                delete: false,
+                syncDirection: "outbound",
+                description: "User profiles and organization membership",
+                limitations: [
+                    "Cannot create users directly - use Invites endpoint instead",
+                    "Cannot modify user profiles via API",
+                    "Can update member roles/permissions via update_members endpoint"
+                ],
+                useCases: ["User directory sync", "Org chart integration", "Identity management"],
+                relatedCategories: ["users", "members", "invites"],
+                notes: "To add users: POST to /invites endpoint to send invitation"
+            },
+            screenshots: {
+                name: "Screenshots",
+                icon: "📸",
+                read: true,
+                create: false,
+                update: false,
+                delete: false,
+                syncDirection: "outbound",
+                description: "Captured screenshots for monitoring",
+                limitations: [
+                    "Read-only - screenshots captured by Hubstaff client",
+                    "Cannot upload, modify, or delete screenshots",
+                    "URLs are time-limited signed URLs"
+                ],
+                useCases: ["Compliance review", "Screenshot archival", "Monitoring dashboards"],
+                relatedCategories: ["screenshots"]
+            },
+            locations: {
+                name: "GPS Locations",
+                icon: "🗺️",
+                read: true,
+                create: false,
+                update: false,
+                delete: false,
+                syncDirection: "outbound",
+                description: "GPS tracking data from mobile devices",
+                limitations: [
+                    "Read-only - locations recorded by mobile app",
+                    "Cannot set or modify location data",
+                    "Requires Locations add-on and mobile app usage"
+                ],
+                useCases: ["Fleet tracking", "Field service management", "Route analysis"],
+                relatedCategories: ["locations", "jobSites", "jobSiteVisits"]
+            },
+            jobSites: {
+                name: "Job Sites (Geofencing)",
+                icon: "📍",
+                read: true,
+                create: true,
+                update: true,
+                delete: false,
+                syncDirection: "both",
+                description: "Geofenced locations for field tracking",
+                limitations: [
+                    "Cannot delete job sites via API",
+                    "Requires Locations add-on",
+                    "Geofence rules define check-in/out radius"
+                ],
+                useCases: ["Auto-create job sites from CRM", "Sync locations from external system", "Field service integration"],
+                relatedCategories: ["jobSites", "jobSiteVisits"]
+            },
+            webhooks: {
+                name: "Webhooks",
+                icon: "🔔",
+                read: true,
+                create: true,
+                update: false,
+                delete: true,
+                syncDirection: "push",
+                description: "Real-time event notifications to your endpoints",
+                limitations: [
+                    "Requires endpoint verification after creation",
+                    "Cannot modify existing webhooks - delete and recreate",
+                    "Events: time entries, activities, screenshots, project/task changes"
+                ],
+                useCases: ["Real-time sync", "Event-driven integrations", "Instant notifications"],
+                relatedCategories: ["webhooks"],
+                notes: "Setup: Create webhook → Verify endpoint → Activate"
+            },
+            clients: {
+                name: "Clients",
+                icon: "🤝",
+                read: true,
+                create: true,
+                update: true,
+                delete: false,
+                syncDirection: "both",
+                description: "Client/customer management",
+                limitations: [
+                    "Cannot delete clients via API",
+                    "Client invoices are read-only"
+                ],
+                useCases: ["CRM integration", "Client sync from external system", "Customer management"],
+                relatedCategories: ["clients", "invoices"]
+            },
+            invoices: {
+                name: "Invoices & Payments",
+                icon: "🧾",
+                read: true,
+                create: false,
+                update: false,
+                delete: false,
+                syncDirection: "outbound",
+                description: "Client and team invoices, payment records",
+                limitations: [
+                    "Read-only - invoices created in Hubstaff UI",
+                    "Cannot create, modify, or process payments via API"
+                ],
+                useCases: ["Accounting integration", "Invoice export", "Payment reconciliation"],
+                relatedCategories: ["invoices", "payments"]
+            },
+            timeOff: {
+                name: "Time Off / PTO",
+                icon: "🏖️",
+                read: true,
+                create: false,
+                update: false,
+                delete: false,
+                syncDirection: "outbound",
+                description: "Leave requests and time-off policies",
+                limitations: [
+                    "Read-only - time off managed in Hubstaff UI",
+                    "Cannot create or approve time-off requests via API"
+                ],
+                useCases: ["HR system sync", "PTO balance reporting", "Leave calendar integration"],
+                relatedCategories: ["timeOff", "holidays"]
+            }
+        };
+        
         // Comprehensive Hubstaff API Knowledge Base from official documentation
         const apiKnowledge = {
             authentication: {
@@ -1275,6 +1816,196 @@
             }
         };
 
+        // =====================================================
+        // CAPABILITY DISPLAY FUNCTIONS
+        // =====================================================
+        
+        function getCapabilityBadge(canDo, label) {
+            if (canDo) {
+                return `<span class="cap-badge cap-yes">✓ ${label}</span>`;
+            } else {
+                return `<span class="cap-badge cap-no">✗ ${label}</span>`;
+            }
+        }
+
+        function getSyncDirectionDisplay(direction) {
+            const directions = {
+                'outbound': { icon: '→', label: 'Hubstaff → External Only', class: 'sync-outbound' },
+                'inbound': { icon: '←', label: 'External → Hubstaff Only', class: 'sync-inbound' },
+                'both': { icon: '↔', label: 'Bi-directional Sync', class: 'sync-both' },
+                'push': { icon: '📤', label: 'Push Notifications (Webhooks)', class: 'sync-push' }
+            };
+            const d = directions[direction] || directions['outbound'];
+            return `<span class="sync-direction ${d.class}">${d.icon} ${d.label}</span>`;
+        }
+
+        function renderCapabilityCard(capKey) {
+            const cap = dataCapabilities[capKey];
+            if (!cap) return '';
+
+            return `
+                <div class="capability-card">
+                    <div class="cap-header">
+                        <span class="cap-icon">${cap.icon}</span>
+                        <span class="cap-name">${cap.name}</span>
+                    </div>
+                    <div class="cap-description">${cap.description}</div>
+                    <div class="cap-badges">
+                        ${getCapabilityBadge(cap.read, 'Read')}
+                        ${getCapabilityBadge(cap.create, 'Create')}
+                        ${getCapabilityBadge(cap.update, 'Update')}
+                        ${getCapabilityBadge(cap.delete, 'Delete')}
+                    </div>
+                    <div class="cap-sync">
+                        ${getSyncDirectionDisplay(cap.syncDirection)}
+                    </div>
+                    ${cap.limitations.length > 0 ? `
+                        <div class="cap-limitations">
+                            <div class="cap-limit-title">⚠️ Limitations:</div>
+                            <ul>
+                                ${cap.limitations.map(l => `<li>${l}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    ${cap.notes ? `
+                        <div class="cap-notes">
+                            <strong>💡 Note:</strong> ${cap.notes}
+                        </div>
+                    ` : ''}
+                    ${cap.useCases.length > 0 ? `
+                        <div class="cap-usecases">
+                            <div class="cap-usecase-title">Common Use Cases:</div>
+                            <div class="cap-usecase-tags">
+                                ${cap.useCases.map(u => `<span class="usecase-tag">${u}</span>`).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function findRelevantCapabilities(query) {
+            const q = query.toLowerCase();
+            const matched = [];
+            
+            // Keyword to capability mapping
+            const capabilityKeywords = {
+                'timesheet': ['timesheets'],
+                'time entry': ['timeEntries'],
+                'time entries': ['timeEntries'],
+                'activity': ['activities'],
+                'activities': ['activities'],
+                'tracking': ['activities', 'timesheets'],
+                'attendance': ['attendance'],
+                'check-in': ['attendance', 'jobSites'],
+                'check-out': ['attendance', 'jobSites'],
+                'checkin': ['attendance', 'jobSites'],
+                'checkout': ['attendance', 'jobSites'],
+                'project': ['projects'],
+                'task': ['tasks'],
+                'user': ['users'],
+                'member': ['users'],
+                'team': ['users'],
+                'screenshot': ['screenshots'],
+                'location': ['locations', 'jobSites'],
+                'gps': ['locations', 'jobSites'],
+                'geofence': ['jobSites'],
+                'job site': ['jobSites'],
+                'webhook': ['webhooks'],
+                'notification': ['webhooks'],
+                'real-time': ['webhooks'],
+                'realtime': ['webhooks'],
+                'client': ['clients'],
+                'customer': ['clients'],
+                'invoice': ['invoices'],
+                'payment': ['invoices'],
+                'payroll': ['timesheets', 'timeEntries'],
+                'erp': ['timesheets', 'projects', 'tasks', 'users'],
+                'sync': ['timesheets', 'projects', 'tasks', 'timeEntries'],
+                'integrate': ['timesheets', 'projects', 'tasks', 'webhooks'],
+                'integration': ['timesheets', 'projects', 'tasks', 'webhooks'],
+                'odoo': ['timesheets', 'projects', 'attendance'],
+                'export': ['timesheets', 'activities', 'screenshots'],
+                'import': ['timeEntries', 'projects', 'tasks'],
+                'time off': ['timeOff'],
+                'pto': ['timeOff'],
+                'leave': ['timeOff'],
+                'vacation': ['timeOff'],
+                'holiday': ['timeOff']
+            };
+
+            // Find matching capabilities
+            const matchedCaps = new Set();
+            Object.entries(capabilityKeywords).forEach(([keyword, caps]) => {
+                if (q.includes(keyword)) {
+                    caps.forEach(cap => matchedCaps.add(cap));
+                }
+            });
+
+            // Also check data capability names directly
+            Object.keys(dataCapabilities).forEach(key => {
+                const cap = dataCapabilities[key];
+                if (cap.name.toLowerCase().includes(q) || 
+                    cap.description.toLowerCase().includes(q) ||
+                    cap.useCases.some(u => u.toLowerCase().includes(q))) {
+                    matchedCaps.add(key);
+                }
+            });
+
+            return Array.from(matchedCaps);
+        }
+
+        function renderCapabilitiesSection(capabilities) {
+            if (capabilities.length === 0) return '';
+
+            return `
+                <div class="capabilities-section">
+                    <div class="cap-section-header">
+                        <span class="cap-section-icon">🔄</span>
+                        <span class="cap-section-title">Data Capabilities</span>
+                    </div>
+                    <div class="cap-section-subtitle">What can be synced, created, updated, or read via the API</div>
+                    <div class="capabilities-grid">
+                        ${capabilities.map(cap => renderCapabilityCard(cap)).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCapabilitiesMatrix() {
+            return `
+                <div class="matrix-container">
+                    <table class="cap-matrix">
+                        <thead>
+                            <tr>
+                                <th>Data Type</th>
+                                <th>Read</th>
+                                <th>Create</th>
+                                <th>Update</th>
+                                <th>Delete</th>
+                                <th>Sync Direction</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${Object.entries(dataCapabilities).map(([key, cap]) => `
+                                <tr onclick="quickSearch('${cap.name.toLowerCase()}')" style="cursor: pointer;">
+                                    <td class="matrix-name">
+                                        <span>${cap.icon}</span>
+                                        <span>${cap.name}</span>
+                                    </td>
+                                    <td class="${cap.read ? 'matrix-yes' : 'matrix-no'}">${cap.read ? '✓' : '✗'}</td>
+                                    <td class="${cap.create ? 'matrix-yes' : 'matrix-no'}">${cap.create ? '✓' : '✗'}</td>
+                                    <td class="${cap.update ? 'matrix-yes' : 'matrix-no'}">${cap.update ? '✓' : '✗'}</td>
+                                    <td class="${cap.delete ? 'matrix-yes' : 'matrix-no'}">${cap.delete ? '✓' : '✗'}</td>
+                                    <td class="matrix-sync">${getSyncDirectionDisplay(cap.syncDirection)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
         function renderKnowledgeBase() {
             const grid = document.getElementById('kbGrid');
             grid.innerHTML = Object.entries(apiKnowledge).map(([key, item]) => `
@@ -1741,7 +2472,17 @@
             const section = document.getElementById('resultsSection');
             document.getElementById('emptyState').style.display = 'none';
 
-            let html = `
+            // Find relevant capabilities for this query
+            const relevantCapabilities = findRelevantCapabilities(query);
+
+            let html = '';
+            
+            // Add capabilities section if we found relevant ones
+            if (relevantCapabilities.length > 0) {
+                html += renderCapabilitiesSection(relevantCapabilities);
+            }
+
+            html += `
                 <div class="answer-card">
                     <div class="answer-header">
                         <div class="answer-icon">💡</div>
@@ -1952,9 +2693,18 @@
             });
         }
 
-        // Initialize
+        function toggleMatrix() {
+            const content = document.getElementById('matrixContent');
+            const toggle = document.getElementById('matrixToggle');
+            content.classList.toggle('open');
+            toggle.textContent = content.classList.contains('open') ? '▲' : '▼';
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             renderKnowledgeBase();
+            
+            // Render the capabilities matrix
+            document.getElementById('matrixContent').innerHTML = renderCapabilitiesMatrix();
             
             // Enter key handler
             document.getElementById('searchInput').addEventListener('keypress', (e) => {
