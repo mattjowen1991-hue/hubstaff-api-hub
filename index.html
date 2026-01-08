@@ -3486,8 +3486,9 @@
         }
 
         function displayResults(results, query) {
-            const section = document.getElementById('resultsSection');
-            document.getElementById('emptyState').style.display = 'none';
+    const section = document.getElementById('resultsSection');
+    // Clear previous results completely before showing new ones
+    section.innerHTML = '';
 
             // Find relevant capabilities for this query
             const relevantCapabilities = findRelevantCapabilities(query);
