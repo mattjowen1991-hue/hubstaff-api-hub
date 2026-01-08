@@ -2170,74 +2170,420 @@
         }
 
         function checkCanDo(query) {
-            // Normalize the query
             const q = query.toLowerCase();
             
-            // Define capabilities with clear YES/NO answers
+            // Enhanced capabilities with full context
             const capabilities = {
-                // Main API - YES capabilities
-                'create project': { answer: 'YES', api: 'Main API', endpoint: 'POST /v2/organizations/{org_id}/projects', note: 'Full CRUD supported for projects' },
-                'update project': { answer: 'YES', api: 'Main API', endpoint: 'PUT /v2/projects/{project_id}', note: 'Can update name, description, status' },
-                'delete project': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Projects cannot be deleted via API - archive instead' },
-                'create task': { answer: 'YES', api: 'Main API', endpoint: 'POST /v2/projects/{project_id}/tasks', note: 'Full CRUD supported for tasks' },
-                'update task': { answer: 'YES', api: 'Main API', endpoint: 'PUT /v2/tasks/{task_id}', note: 'Can update all task fields' },
-                'delete task': { answer: 'YES', api: 'Main API', endpoint: 'DELETE /v2/tasks/{task_id}', note: 'Tasks can be deleted' },
-                'get timesheet': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/timesheets', note: 'Read-only access to aggregated time data' },
-                'create timesheet': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Timesheets are generated from tracked time - cannot create directly' },
-                'edit time': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Time entries cannot be created/edited via API - only read' },
-                'get screenshot': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/screenshots', note: 'Can retrieve screenshot URLs and metadata' },
-                'delete screenshot': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Screenshots cannot be deleted via API' },
-                'create webhook': { answer: 'YES', api: 'Main API', endpoint: 'POST /v2/organizations/{org_id}/webhooks', note: 'Supports real-time notifications' },
-                'delete webhook': { answer: 'YES', api: 'Main API', endpoint: 'DELETE /v2/webhooks/{webhook_id}', note: 'Webhooks can be removed' },
-                'create team': { answer: 'YES', api: 'Main API', endpoint: 'POST /v2/organizations/{org_id}/teams', note: 'Full CRUD for teams' },
-                'delete team': { answer: 'YES', api: 'Main API', endpoint: 'DELETE /v2/teams/{team_id}', note: 'Teams can be deleted' },
-                'create user': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Use Invites API to add users - POST /v2/organizations/{org_id}/invites' },
-                'invite user': { answer: 'YES', api: 'Main API', endpoint: 'POST /v2/organizations/{org_id}/invites', note: 'Can send invites, including bulk invites' },
-                'remove user': { answer: 'YES', api: 'Main API', endpoint: 'PUT /v2/organizations/{org_id}/update_members', note: 'Update member status to remove' },
-                'create client': { answer: 'YES', api: 'Main API', endpoint: 'POST /v2/organizations/{org_id}/clients', note: 'Can create and update clients' },
-                'delete client': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Clients cannot be deleted via API' },
-                'get attendance': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/attendance_shifts', note: 'Attendance derived from activity times' },
-                'check in': { answer: 'INDIRECT', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/job_site_visits', note: 'Use Job Site Visits for GPS-based check-in/out' },
-                'check out': { answer: 'INDIRECT', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/job_site_visits', note: 'Use Job Site Visits for GPS-based check-in/out' },
-                'create job site': { answer: 'YES', api: 'Main API', endpoint: 'POST /v2/organizations/{org_id}/job_sites', note: 'Can create geofenced locations' },
-                'get location': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/locations', note: 'GPS location data available' },
-                'track location': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/locations', note: 'GPS tracking data from mobile app' },
-                'get activity': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/activities', note: 'Full activity data with productivity metrics' },
-                'get time off': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/time_off_requests', note: 'Read-only access to PTO data' },
-                'create time off': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Time off requests managed in Hubstaff UI only' },
-                'get invoice': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/client_invoices', note: 'Read-only access to invoices' },
-                'create invoice': { answer: 'NO', api: 'Main API', endpoint: null, note: 'Invoices created in Hubstaff UI only' },
-                'sync payroll': { answer: 'YES', api: 'Main API', endpoint: 'GET /v2/organizations/{org_id}/timesheets', note: 'Export timesheet data for payroll systems' },
-                'integrate erp': { answer: 'YES', api: 'Main API', endpoint: 'Multiple endpoints', note: 'Full API access on Team/Enterprise plans' },
-                'integrate odoo': { answer: 'YES', api: 'Main API', endpoint: 'Multiple endpoints', note: 'Timesheets, projects, tasks all accessible' },
+                // ===== PROJECTS =====
+                'create project': { 
+                    answer: 'YES', 
+                    question: 'Can I create projects via the API?',
+                    howTo: [
+                        { method: 'POST', endpoint: '/v2/organizations/{org_id}/projects', desc: 'Create a new project' }
+                    ],
+                    notes: ['Full CRUD supported for projects', 'Can set name, description, and client assignment'],
+                    requirements: ['Team or Enterprise plan'],
+                    limitations: []
+                },
+                'update project': { 
+                    answer: 'YES', 
+                    question: 'Can I update/edit projects via the API?',
+                    howTo: [
+                        { method: 'PUT', endpoint: '/v2/projects/{project_id}', desc: 'Update project details' },
+                        { method: 'PUT', endpoint: '/v2/projects/{project_id}/update_metadata', desc: 'Update project metadata' }
+                    ],
+                    notes: ['Can update name, description, status, and client'],
+                    requirements: ['Team or Enterprise plan'],
+                    limitations: []
+                },
+                'delete project': { 
+                    answer: 'NO', 
+                    question: 'Can I delete projects via the API?',
+                    howTo: [],
+                    notes: ['Projects cannot be deleted via API'],
+                    requirements: [],
+                    limitations: ['No DELETE endpoint exists for projects'],
+                    alternatives: [
+                        { method: 'PUT', endpoint: '/v2/projects/{project_id}', desc: 'Archive the project by updating its status instead' }
+                    ]
+                },
 
-                // Tasks API capabilities
-                'create task tasks api': { answer: 'YES', api: 'Tasks API', endpoint: 'POST /v1/lists/{list_id}/tasks', note: 'Create tasks in lists' },
-                'complete task': { answer: 'YES', api: 'Tasks API', endpoint: 'PATCH /v1/tasks/{task_id}/complete', note: 'Mark tasks as complete' },
-                'delete task tasks api': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Tasks cannot be deleted via Tasks API' },
-                'add comment': { answer: 'YES', api: 'Tasks API', endpoint: 'POST /v1/tasks/{task_id}/comments', note: 'Can add comments to tasks' },
-                'delete comment': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Comments cannot be edited or deleted via API' },
-                'create checklist': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Checklists are read-only via API' },
-                'view checklist': { answer: 'YES', api: 'Tasks API', endpoint: 'GET /v1/tasks/{task_id}/checklists', note: 'Can view checklists and items' },
-                'create folder': { answer: 'YES', api: 'Tasks API', endpoint: 'POST /v1/organizations/{org_id}/folders', note: 'Can create folders' },
-                'delete folder': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Folders cannot be deleted via API' },
-                'create label': { answer: 'YES', api: 'Tasks API', endpoint: 'POST /v1/projects/{project_id}/labels', note: 'Can create labels' },
-                'delete label': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Labels cannot be deleted via API' },
-                'create list': { answer: 'YES', api: 'Tasks API', endpoint: 'POST /v1/projects/{project_id}/lists', note: 'Can create Kanban lists' },
-                'delete list': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Lists cannot be deleted via API' },
-                'log time': { answer: 'YES', api: 'Tasks API', endpoint: 'POST /v1/tasks/{task_id}/time_entries', note: 'Can log time to tasks' },
-                'delete time entry': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Time entries cannot be deleted via Tasks API' },
-                'upload attachment': { answer: 'NO', api: 'Tasks API', endpoint: null, note: 'Attachments are read-only via API' },
-                'view attachment': { answer: 'YES', api: 'Tasks API', endpoint: 'GET /v1/tasks/{task_id}/attachments', note: 'Can view attachment list' },
-                'assign task': { answer: 'YES', api: 'Tasks API', endpoint: 'PATCH /v1/tasks/{task_id}', note: 'Update task to change assignee' },
-                'get assigned tasks': { answer: 'YES', api: 'Tasks API', endpoint: 'GET /v1/tasks/my/assigned', note: 'View tasks assigned to current user' },
+                // ===== TASKS =====
+                'create task': { 
+                    answer: 'YES', 
+                    question: 'Can I create tasks via the API?',
+                    howTo: [
+                        { method: 'POST', endpoint: '/v2/projects/{project_id}/tasks', desc: 'Create a task in a project' }
+                    ],
+                    notes: ['Full CRUD supported for tasks', 'Tasks must be associated with a project'],
+                    requirements: ['Team or Enterprise plan'],
+                    limitations: []
+                },
+                'update task': { 
+                    answer: 'YES', 
+                    question: 'Can I update/edit tasks via the API?',
+                    howTo: [
+                        { method: 'PUT', endpoint: '/v2/tasks/{task_id}', desc: 'Update task details' },
+                        { method: 'PUT', endpoint: '/v2/tasks/{task_id}/update_metadata', desc: 'Update task metadata' }
+                    ],
+                    notes: ['Can update name, description, assignees, and status'],
+                    requirements: ['Team or Enterprise plan'],
+                    limitations: []
+                },
+                'delete task': { 
+                    answer: 'YES', 
+                    question: 'Can I delete tasks via the API?',
+                    howTo: [
+                        { method: 'DELETE', endpoint: '/v2/tasks/{task_id}', desc: 'Delete a task' }
+                    ],
+                    notes: ['Tasks can be permanently deleted'],
+                    requirements: ['Team or Enterprise plan'],
+                    limitations: ['Deletion is permanent - cannot be undone']
+                },
 
-                // Developer resource capabilities
-                'use postman': { answer: 'YES', api: 'Tools', endpoint: 'github.com/NetsoftHoldings/public-api-postman', note: 'Official Postman collection available for API testing' },
-                'use nodejs': { answer: 'YES', api: 'Tools', endpoint: 'github.com/NetsoftHoldings/public-api-nodejs-demo', note: 'Official Node.js demo with openid-client' },
-                'use php': { answer: 'YES', api: 'Tools', endpoint: 'github.com/NetsoftHoldings/public-api-php-demo', note: 'Official PHP demo available' },
-                'refresh token': { answer: 'YES', api: 'Main API', endpoint: 'POST /oauth/token', note: 'Use refresh_token grant type to get new access tokens' },
-                'get access token': { answer: 'YES', api: 'Main API', endpoint: 'POST /oauth/token', note: 'Exchange refresh_token for short-lived access token' },
+                // ===== TIMESHEETS & TIME =====
+                'get timesheet': { 
+                    answer: 'YES', 
+                    question: 'Can I get/export timesheet data via the API?',
+                    howTo: [
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/timesheets', desc: 'Get aggregated timesheet data' }
+                    ],
+                    notes: ['Read-only access to aggregated time data', 'Supports date range filtering', 'Can group by user, project, or date'],
+                    requirements: ['Team or Enterprise plan'],
+                    limitations: ['Read-only - cannot modify timesheets']
+                },
+                'create timesheet': { 
+                    answer: 'NO', 
+                    question: 'Can I create/add timesheets via the API?',
+                    howTo: [],
+                    notes: ['Timesheets are automatically generated from tracked time'],
+                    requirements: [],
+                    limitations: ['No POST endpoint exists - timesheets are derived data'],
+                    alternatives: [
+                        { method: 'POST', endpoint: '/v2/users/{user_id}/time_entries', desc: 'Create individual time entries instead (will appear in timesheets)' }
+                    ]
+                },
+                'create time entry': { 
+                    answer: 'YES', 
+                    question: 'Can I create time entries via the API?',
+                    howTo: [
+                        { method: 'POST', endpoint: '/v2/users/{user_id}/time_entries', desc: 'Create a manual time entry' }
+                    ],
+                    notes: ['Created entries are marked as manual time', 'Requires start time, project, and user'],
+                    requirements: ['Team or Enterprise plan'],
+                    limitations: ['Cannot modify or delete existing entries', 'Cannot set activity levels (keyboard/mouse)']
+                },
+                'edit time': { 
+                    answer: 'NO', 
+                    question: 'Can I edit/modify existing time entries via the API?',
+                    howTo: [],
+                    notes: ['Existing time entries cannot be modified via API'],
+                    requirements: [],
+                    limitations: ['No PUT/PATCH endpoint for time entries', 'Time editing must be done in Hubstaff UI'],
+                    alternatives: []
+                },
+                'delete time entry': { 
+                    answer: 'NO', 
+                    question: 'Can I delete time entries via the API?',
+                    howTo: [],
+                    notes: ['Time entries cannot be deleted via API'],
+                    requirements: [],
+                    limitations: ['No DELETE endpoint exists', 'Deletion must be done in Hubstaff UI'],
+                    alternatives: []
+                },
+
+                // ===== SCREENSHOTS =====
+                'get screenshot': { 
+                    answer: 'YES', 
+                    question: 'Can I retrieve/view screenshots via the API?',
+                    howTo: [
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/screenshots', desc: 'List organization screenshots' },
+                        { method: 'GET', endpoint: '/v2/projects/{project_id}/screenshots', desc: 'List project screenshots' }
+                    ],
+                    notes: ['Returns screenshot metadata and signed URLs', 'URLs are time-limited - download promptly'],
+                    requirements: ['Team or Enterprise plan', 'Screenshots feature enabled'],
+                    limitations: ['Read-only access']
+                },
+                'delete screenshot': { 
+                    answer: 'NO', 
+                    question: 'Can I delete screenshots via the API?',
+                    howTo: [],
+                    notes: ['Screenshots cannot be deleted via API'],
+                    requirements: [],
+                    limitations: ['No DELETE endpoint exists', 'Screenshot deletion must be done in Hubstaff UI'],
+                    alternatives: []
+                },
+
+                // ===== WEBHOOKS =====
+                'create webhook': { 
+                    answer: 'YES', 
+                    question: 'Can I create webhooks via the API?',
+                    howTo: [
+                        { method: 'POST', endpoint: '/v2/organizations/{org_id}/webhooks', desc: 'Create organization webhook' },
+                        { method: 'POST', endpoint: '/v2/projects/{project_id}/webhooks', desc: 'Create project webhook' },
+                        { method: 'POST', endpoint: '/v2/users/me/webhooks', desc: 'Create user webhook' }
+                    ],
+                    notes: ['Requires endpoint verification after creation', 'Hubstaff sends POST with x-hs-verification header', 'Must activate webhook after verification'],
+                    requirements: ['Team or Enterprise plan', 'HTTPS endpoint to receive webhooks'],
+                    limitations: ['Cannot modify existing webhooks - delete and recreate instead']
+                },
+                'delete webhook': { 
+                    answer: 'YES', 
+                    question: 'Can I delete webhooks via the API?',
+                    howTo: [
+                        { method: 'DELETE', endpoint: '/v2/webhooks/{webhook_id}', desc: 'Delete a webhook' }
+                    ],
+                    notes: ['Webhooks can be removed at any time'],
+                    requirements: ['Team or Enterprise plan'],
+                    limitations: []
+                },
+
+                // ===== USERS & MEMBERS =====
+                'create user': { 
+                    answer: 'INDIRECT', 
+                    question: 'Can I create/add users via the API?',
+                    howTo: [],
+                    notes: ['Users cannot be created directly - they must accept an invitation'],
+                    requirements: [],
+                    limitations: ['No direct user creation endpoint'],
+                    alternatives: [
+                        { method: 'POST', endpoint: '/v2/organizations/{org_id}/invites', desc: 'Send an invitation to a new user' },
+                        { method: 'POST', endpoint: '/v2/organizations/{org_id}/invites/bulk', desc: 'Send bulk invitations' }
+                    ]
+                },
+                'invite user': { 
+                    answer: 'YES', 
+                    question: 'Can I invite users via the API?',
+                    howTo: [
+                        { method: 'POST', endpoint: '/v2/organizations/{org_id}/invites', desc: 'Send invitation to one user' },
+                        { method: 'POST', endpoint: '/v2/organizations/{org_id}/invites/bulk', desc: 'Send invitations to multiple users' }
+                    ],
+                    notes: ['Invitee receives email to join organization', 'Can set role and project assignments in invite'],
+                    requirements: ['Team or Enterprise plan', 'Admin permissions'],
+                    limitations: ['User must accept invite to become active member']
+                },
+                'remove user': { 
+                    answer: 'YES', 
+                    question: 'Can I remove users from an organization via the API?',
+                    howTo: [
+                        { method: 'PUT', endpoint: '/v2/organizations/{org_id}/update_members', desc: 'Update member status to remove them' }
+                    ],
+                    notes: ['Update member status/role to remove from organization'],
+                    requirements: ['Team or Enterprise plan', 'Admin permissions'],
+                    limitations: []
+                },
+
+                // ===== CLIENTS =====
+                'create client': { 
+                    answer: 'YES', 
+                    question: 'Can I create clients via the API?',
+                    howTo: [
+                        { method: 'POST', endpoint: '/v2/organizations/{org_id}/clients', desc: 'Create a new client' }
+                    ],
+                    notes: ['Can set client name, email, and other details'],
+                    requirements: ['Team or Enterprise plan'],
+                    limitations: []
+                },
+                'delete client': { 
+                    answer: 'NO', 
+                    question: 'Can I delete clients via the API?',
+                    howTo: [],
+                    notes: ['Clients cannot be deleted via API'],
+                    requirements: [],
+                    limitations: ['No DELETE endpoint exists', 'Client deletion must be done in Hubstaff UI'],
+                    alternatives: [
+                        { method: 'PUT', endpoint: '/v2/clients/{client_id}', desc: 'Update client to mark as inactive instead' }
+                    ]
+                },
+
+                // ===== ATTENDANCE & CHECK-IN =====
+                'get attendance': { 
+                    answer: 'YES', 
+                    question: 'Can I get attendance data via the API?',
+                    howTo: [
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/attendance_shifts', desc: 'Get actual working periods' },
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/attendance_schedules', desc: 'Get expected work schedules' }
+                    ],
+                    notes: ['Attendance is derived from activity tracking times', 'Shifts show actual work periods based on first/last activity'],
+                    requirements: ['Team or Enterprise plan'],
+                    limitations: ['Read-only - cannot mark attendance directly']
+                },
+                'check in': { 
+                    answer: 'INDIRECT', 
+                    question: 'Can I track check-in/check-out via the API?',
+                    howTo: [],
+                    notes: ['There is no direct "check-in" endpoint, but attendance can be tracked two ways'],
+                    requirements: [],
+                    limitations: ['No explicit check-in/check-out endpoint'],
+                    alternatives: [
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/activities', desc: 'Option 1: Activity-based - First activity = start of day, last activity = end of day. Included in all plans.' },
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/job_site_visits', desc: 'Option 2: GPS Geofencing - Explicit check-in when entering a geofenced Job Site. Requires Locations add-on.' }
+                    ]
+                },
+                'check out': { 
+                    answer: 'INDIRECT', 
+                    question: 'Can I track check-in/check-out via the API?',
+                    howTo: [],
+                    notes: ['There is no direct "check-out" endpoint, but attendance can be tracked two ways'],
+                    requirements: [],
+                    limitations: ['No explicit check-in/check-out endpoint'],
+                    alternatives: [
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/activities', desc: 'Option 1: Activity-based - First activity = start of day, last activity = end of day. Included in all plans.' },
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/job_site_visits', desc: 'Option 2: GPS Geofencing - Explicit check-out when leaving a geofenced Job Site. Requires Locations add-on.' }
+                    ]
+                },
+
+                // ===== JOB SITES =====
+                'create job site': { 
+                    answer: 'YES', 
+                    question: 'Can I create job sites via the API?',
+                    howTo: [
+                        { method: 'POST', endpoint: '/v2/organizations/{org_id}/job_sites', desc: 'Create a geofenced job site' }
+                    ],
+                    notes: ['Define location coordinates and geofence radius', 'Can assign members to job sites'],
+                    requirements: ['Team or Enterprise plan', 'Locations add-on'],
+                    limitations: ['Cannot delete job sites via API']
+                },
+                'delete job site': { 
+                    answer: 'NO', 
+                    question: 'Can I delete job sites via the API?',
+                    howTo: [],
+                    notes: ['Job sites cannot be deleted via API'],
+                    requirements: [],
+                    limitations: ['No DELETE endpoint exists'],
+                    alternatives: [
+                        { method: 'PUT', endpoint: '/v2/job_sites/{job_site_id}', desc: 'Disable or archive the job site instead' }
+                    ]
+                },
+
+                // ===== LOCATIONS =====
+                'get location': { 
+                    answer: 'YES', 
+                    question: 'Can I get GPS location data via the API?',
+                    howTo: [
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/locations', desc: 'Get organization location data' },
+                        { method: 'GET', endpoint: '/v2/projects/{project_id}/locations', desc: 'Get project location data' }
+                    ],
+                    notes: ['Returns GPS coordinates and timestamps', 'Data comes from mobile app tracking'],
+                    requirements: ['Team or Enterprise plan', 'Locations add-on', 'Mobile app usage'],
+                    limitations: ['Read-only - cannot set location data']
+                },
+                'track location': { 
+                    answer: 'YES', 
+                    question: 'Can I track GPS locations via the API?',
+                    howTo: [
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/locations', desc: 'Get GPS tracking data' },
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/job_site_visits', desc: 'Get job site arrival/departure data' }
+                    ],
+                    notes: ['Location data recorded by Hubstaff mobile app', 'Job site visits provide geofenced check-in/out'],
+                    requirements: ['Team or Enterprise plan', 'Locations add-on'],
+                    limitations: ['Read-only - locations are recorded by the app, not set via API']
+                },
+
+                // ===== TIME OFF =====
+                'get time off': { 
+                    answer: 'YES', 
+                    question: 'Can I get time off / PTO data via the API?',
+                    howTo: [
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/time_off_requests', desc: 'List time off requests' },
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/time_off_policies', desc: 'List time off policies' }
+                    ],
+                    notes: ['Read-only access to PTO requests and balances'],
+                    requirements: ['Team or Enterprise plan'],
+                    limitations: ['Cannot create or approve requests via API']
+                },
+                'create time off': { 
+                    answer: 'NO', 
+                    question: 'Can I create time off requests via the API?',
+                    howTo: [],
+                    notes: ['Time off requests must be created in Hubstaff UI'],
+                    requirements: [],
+                    limitations: ['No POST endpoint for time off requests', 'No approval workflow via API'],
+                    alternatives: []
+                },
+
+                // ===== INVOICES =====
+                'get invoice': { 
+                    answer: 'YES', 
+                    question: 'Can I get invoice data via the API?',
+                    howTo: [
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/client_invoices', desc: 'List client invoices' },
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/team_invoices', desc: 'List team invoices' }
+                    ],
+                    notes: ['Read-only access to invoice data'],
+                    requirements: ['Team or Enterprise plan'],
+                    limitations: ['Cannot create or modify invoices via API']
+                },
+                'create invoice': { 
+                    answer: 'NO', 
+                    question: 'Can I create invoices via the API?',
+                    howTo: [],
+                    notes: ['Invoices must be created in Hubstaff UI'],
+                    requirements: [],
+                    limitations: ['No POST endpoint for invoices'],
+                    alternatives: []
+                },
+
+                // ===== TEAMS =====
+                'create team': { 
+                    answer: 'YES', 
+                    question: 'Can I create teams via the API?',
+                    howTo: [
+                        { method: 'POST', endpoint: '/v2/organizations/{org_id}/teams', desc: 'Create a new team' }
+                    ],
+                    notes: ['Full CRUD supported for teams'],
+                    requirements: ['Team or Enterprise plan', 'Admin permissions'],
+                    limitations: []
+                },
+                'delete team': { 
+                    answer: 'YES', 
+                    question: 'Can I delete teams via the API?',
+                    howTo: [
+                        { method: 'DELETE', endpoint: '/v2/teams/{team_id}', desc: 'Delete a team' }
+                    ],
+                    notes: ['Teams can be permanently deleted'],
+                    requirements: ['Team or Enterprise plan', 'Admin permissions'],
+                    limitations: ['Deletion is permanent']
+                },
+
+                // ===== INTEGRATIONS =====
+                'sync payroll': { 
+                    answer: 'YES', 
+                    question: 'Can I sync data with payroll systems via the API?',
+                    howTo: [
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/timesheets', desc: 'Export timesheet data for payroll' },
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/activities', desc: 'Get detailed activity data' },
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/team_payments', desc: 'Get payment records' }
+                    ],
+                    notes: ['Export aggregated time data for payroll processing', 'Supports date range filtering'],
+                    requirements: ['Team or Enterprise plan'],
+                    limitations: ['Read-only - data flows from Hubstaff to payroll system']
+                },
+                'integrate erp': { 
+                    answer: 'YES', 
+                    question: 'Can the Hubstaff API integrate with ERP systems?',
+                    howTo: [
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/timesheets', desc: 'Sync timesheet data' },
+                        { method: 'GET/POST/PUT', endpoint: '/v2/.../projects', desc: 'Sync projects bi-directionally' },
+                        { method: 'GET/POST/PUT/DELETE', endpoint: '/v2/.../tasks', desc: 'Sync tasks bi-directionally' },
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/members', desc: 'Sync user/employee data' }
+                    ],
+                    notes: ['Full API access for ERP integrations', 'Projects and tasks support bi-directional sync', 'Timesheets and activities are read-only'],
+                    requirements: ['Team or Enterprise plan'],
+                    limitations: ['Rate limit: 350 requests/minute']
+                },
+                'integrate odoo': { 
+                    answer: 'YES', 
+                    question: 'Can the Hubstaff API integrate with Odoo?',
+                    howTo: [
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/timesheets', desc: 'Sync timesheets to Odoo' },
+                        { method: 'GET/POST/PUT', endpoint: '/v2/.../projects', desc: 'Sync projects with Odoo' },
+                        { method: 'GET', endpoint: '/v2/organizations/{org_id}/activities', desc: 'Sync attendance data to Odoo' }
+                    ],
+                    notes: ['Commonly used for timesheet and attendance sync', 'Projects can sync bi-directionally'],
+                    requirements: ['Team or Enterprise plan'],
+                    limitations: ['Timesheets are read-only in Hubstaff', 'Rate limit: 350 requests/minute']
+                }
             };
 
             // Check for matches
@@ -2255,21 +2601,37 @@
                 { patterns: ['delete', 'remove', 'destroy'], subject: 'task', key: 'delete task' },
                 { patterns: ['edit', 'update', 'modify', 'change'], subject: 'project', key: 'update project' },
                 { patterns: ['edit', 'update', 'modify', 'change'], subject: 'task', key: 'update task' },
-                { patterns: ['get', 'view', 'see', 'read', 'fetch', 'retrieve', 'export'], subject: 'timesheet', key: 'get timesheet' },
+                { patterns: ['get', 'view', 'see', 'read', 'fetch', 'retrieve', 'export', 'pull'], subject: 'timesheet', key: 'get timesheet' },
+                { patterns: ['create', 'add', 'make', 'post', 'push'], subject: 'timesheet', key: 'create timesheet' },
+                { patterns: ['create', 'add', 'log', 'record'], subject: 'time entry', key: 'create time entry' },
+                { patterns: ['edit', 'update', 'modify', 'change'], subject: 'time', key: 'edit time' },
                 { patterns: ['get', 'view', 'see', 'read', 'fetch', 'retrieve'], subject: 'screenshot', key: 'get screenshot' },
-                { patterns: ['create', 'add', 'set up', 'setup'], subject: 'webhook', key: 'create webhook' },
+                { patterns: ['delete', 'remove'], subject: 'screenshot', key: 'delete screenshot' },
+                { patterns: ['create', 'add', 'set up', 'setup', 'configure'], subject: 'webhook', key: 'create webhook' },
+                { patterns: ['delete', 'remove'], subject: 'webhook', key: 'delete webhook' },
+                { patterns: ['create', 'add', 'new'], subject: 'user', key: 'create user' },
                 { patterns: ['invite', 'add'], subject: 'user', key: 'invite user' },
+                { patterns: ['remove', 'delete'], subject: 'user', key: 'remove user' },
+                { patterns: ['create', 'add', 'new'], subject: 'client', key: 'create client' },
+                { patterns: ['delete', 'remove'], subject: 'client', key: 'delete client' },
                 { patterns: ['check', 'clock'], subject: 'in', key: 'check in' },
                 { patterns: ['check', 'clock'], subject: 'out', key: 'check out' },
-                { patterns: ['complete', 'finish', 'done', 'close'], subject: 'task', key: 'complete task' },
-                { patterns: ['comment', 'add comment', 'post comment'], subject: 'task', key: 'add comment' },
+                { patterns: ['get', 'view', 'fetch', 'retrieve'], subject: 'attendance', key: 'get attendance' },
+                { patterns: ['create', 'add', 'new'], subject: 'job site', key: 'create job site' },
+                { patterns: ['delete', 'remove'], subject: 'job site', key: 'delete job site' },
+                { patterns: ['get', 'view', 'track', 'fetch'], subject: 'location', key: 'get location' },
+                { patterns: ['get', 'view', 'track', 'fetch'], subject: 'gps', key: 'track location' },
+                { patterns: ['get', 'view', 'fetch'], subject: 'time off', key: 'get time off' },
+                { patterns: ['get', 'view', 'fetch'], subject: 'pto', key: 'get time off' },
+                { patterns: ['create', 'add', 'request'], subject: 'time off', key: 'create time off' },
+                { patterns: ['create', 'add', 'request'], subject: 'pto', key: 'create time off' },
+                { patterns: ['get', 'view', 'fetch', 'export'], subject: 'invoice', key: 'get invoice' },
+                { patterns: ['create', 'add', 'make'], subject: 'invoice', key: 'create invoice' },
+                { patterns: ['create', 'add', 'new'], subject: 'team', key: 'create team' },
+                { patterns: ['delete', 'remove'], subject: 'team', key: 'delete team' },
                 { patterns: ['sync', 'integrate', 'connect', 'export'], subject: 'payroll', key: 'sync payroll' },
                 { patterns: ['sync', 'integrate', 'connect'], subject: 'erp', key: 'integrate erp' },
                 { patterns: ['sync', 'integrate', 'connect'], subject: 'odoo', key: 'integrate odoo' },
-                { patterns: ['track', 'get', 'view'], subject: 'location', key: 'track location' },
-                { patterns: ['track', 'get', 'view'], subject: 'gps', key: 'track location' },
-                { patterns: ['log', 'track', 'add', 'record'], subject: 'time', key: 'log time' },
-                { patterns: ['assign'], subject: 'task', key: 'assign task' },
             ];
 
             for (const match of fuzzyMatches) {
@@ -2283,6 +2645,153 @@
             return null;
         }
 
+        function renderCanDoResult(result) {
+            const statusClass = result.answer === 'YES' ? 'status-supported' : 
+                               result.answer === 'NO' ? 'status-unavailable' : 'status-indirect';
+            const statusIcon = result.answer === 'YES' ? '✅' : 
+                              result.answer === 'NO' ? '❌' : '⚠️';
+            const boxClass = result.answer === 'YES' ? 'success' : 'warning';
+
+            let html = `
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <span class="status-badge ${statusClass}" style="font-size: 1.5rem; padding: 0.75rem 2rem;">
+                        ${statusIcon} ${result.answer}
+                    </span>
+                </div>
+
+                <div class="info-box" style="background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2); margin-bottom: 1rem;">
+                    <span class="info-icon">📋</span>
+                    <div class="info-content">
+                        <strong>What you're asking:</strong><br>
+                        ${result.question}
+                    </div>
+                </div>
+            `;
+
+            // HOW TO ACHIEVE THIS (for YES answers)
+            if (result.answer === 'YES' && result.howTo && result.howTo.length > 0) {
+                html += `
+                    <div class="info-box ${boxClass}" style="margin-bottom: 1rem;">
+                        <span class="info-icon">✅</span>
+                        <div class="info-content">
+                            <strong>How to achieve this:</strong><br><br>
+                            ${result.howTo.map(h => `
+                                <div style="margin-bottom: 0.5rem;">
+                                    <code style="background: var(--bg-dark); padding: 2px 6px; border-radius: 4px;">
+                                        <span class="method-badge method-${h.method.toLowerCase().split('/')[0]}" style="font-size: 0.65rem; padding: 2px 4px; margin-right: 4px;">${h.method}</span>
+                                        ${h.endpoint}
+                                    </code>
+                                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; margin-left: 4px;">↳ ${h.desc}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // WHY NOT & ALTERNATIVES (for NO answers)
+            if (result.answer === 'NO') {
+                html += `
+                    <div class="info-box warning" style="margin-bottom: 1rem;">
+                        <span class="info-icon">❌</span>
+                        <div class="info-content">
+                            <strong>Why this isn't possible:</strong><br>
+                            <ul style="margin: 0.5rem 0 0 1rem;">
+                                ${result.limitations.map(l => `<li>${l}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+
+                if (result.alternatives && result.alternatives.length > 0) {
+                    html += `
+                        <div class="info-box" style="background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.2); margin-bottom: 1rem;">
+                            <span class="info-icon">💡</span>
+                            <div class="info-content">
+                                <strong>Alternative approach:</strong><br><br>
+                                ${result.alternatives.map(a => `
+                                    <div style="margin-bottom: 0.5rem;">
+                                        <code style="background: var(--bg-dark); padding: 2px 6px; border-radius: 4px;">
+                                            <span class="method-badge method-${a.method.toLowerCase()}" style="font-size: 0.65rem; padding: 2px 4px; margin-right: 4px;">${a.method}</span>
+                                            ${a.endpoint}
+                                        </code>
+                                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; margin-left: 4px;">↳ ${a.desc}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            // INDIRECT - Show alternatives as the main way to achieve it
+            if (result.answer === 'INDIRECT') {
+                html += `
+                    <div class="info-box warning" style="margin-bottom: 1rem;">
+                        <span class="info-icon">⚠️</span>
+                        <div class="info-content">
+                            <strong>Why this is indirect:</strong><br>
+                            <ul style="margin: 0.5rem 0 0 1rem;">
+                                ${result.limitations.map(l => `<li>${l}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+
+                if (result.alternatives && result.alternatives.length > 0) {
+                    html += `
+                        <div class="info-box success" style="margin-bottom: 1rem;">
+                            <span class="info-icon">✅</span>
+                            <div class="info-content">
+                                <strong>How to achieve this instead:</strong><br><br>
+                                ${result.alternatives.map(a => `
+                                    <div style="margin-bottom: 0.75rem;">
+                                        <code style="background: var(--bg-dark); padding: 2px 6px; border-radius: 4px;">
+                                            <span class="method-badge method-${a.method.toLowerCase()}" style="font-size: 0.65rem; padding: 2px 4px; margin-right: 4px;">${a.method}</span>
+                                            ${a.endpoint}
+                                        </code>
+                                        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px; margin-left: 4px;">↳ ${a.desc}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            // NOTES (always show if present)
+            if (result.notes && result.notes.length > 0) {
+                html += `
+                    <div class="info-box" style="margin-bottom: 1rem;">
+                        <span class="info-icon">📝</span>
+                        <div class="info-content">
+                            <strong>Notes:</strong>
+                            <ul style="margin: 0.5rem 0 0 1rem;">
+                                ${result.notes.map(n => `<li>${n}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // REQUIREMENTS (show if present)
+            if (result.requirements && result.requirements.length > 0) {
+                html += `
+                    <div class="info-box" style="background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.2); margin-bottom: 1rem;">
+                        <span class="info-icon">📋</span>
+                        <div class="info-content">
+                            <strong>Requirements:</strong>
+                            <ul style="margin: 0.5rem 0 0 1rem;">
+                                ${result.requirements.map(r => `<li>${r}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+
+            return html;
+        }
+
         function generateSummary(query, matches) {
             let summary = "";
 
@@ -2291,29 +2800,7 @@
             const canDoResult = checkCanDo(query);
 
             if (isCanQuestion && canDoResult) {
-                const statusClass = canDoResult.answer === 'YES' ? 'status-supported' : 
-                                   canDoResult.answer === 'NO' ? 'status-unavailable' : 'status-indirect';
-                const statusIcon = canDoResult.answer === 'YES' ? '✅' : 
-                                  canDoResult.answer === 'NO' ? '❌' : '⚠️';
-                const boxClass = canDoResult.answer === 'YES' ? 'success' : 
-                                canDoResult.answer === 'NO' ? 'warning' : 'warning';
-
-                summary = `
-                    <div style="text-align: center; margin-bottom: 1.5rem;">
-                        <span class="status-badge ${statusClass}" style="font-size: 1.5rem; padding: 0.75rem 2rem;">
-                            ${statusIcon} ${canDoResult.answer}
-                        </span>
-                    </div>
-                    <div class="info-box ${boxClass}">
-                        <span class="info-icon">${statusIcon}</span>
-                        <div class="info-content">
-                            <strong>API:</strong> ${canDoResult.api}<br>
-                            ${canDoResult.endpoint ? `<strong>Endpoint:</strong> <code style="background: var(--bg-dark); padding: 2px 6px; border-radius: 4px;">${canDoResult.endpoint}</code><br>` : ''}
-                            <strong>Note:</strong> ${canDoResult.note}
-                        </div>
-                    </div>
-                `;
-                return summary;
+                return renderCanDoResult(canDoResult);
             }
 
             // ERP/Odoo integration query
@@ -2491,10 +2978,6 @@
                     <div class="answer-content">
                         ${results.summary}
                     </div>
-                    <button class="copy-btn" onclick="copyAnswer()">
-                        <span>📋</span>
-                        <span>Copy Response</span>
-                    </button>
                 </div>
             `;
 
