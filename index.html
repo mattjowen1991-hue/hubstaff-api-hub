@@ -850,6 +850,286 @@
                 padding: 0.5rem;
             }
         }
+
+        /* =====================================================
+           HELP OVERLAY STYLES
+           ===================================================== */
+        
+        .help-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .help-overlay.open {
+            display: flex;
+        }
+
+        .help-modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .help-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-dark);
+        }
+
+        .help-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+        }
+
+        .help-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .help-close:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        .help-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .help-nav {
+            width: 220px;
+            background: var(--bg-dark);
+            border-right: 1px solid var(--border);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .help-nav-btn {
+            background: none;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .help-nav-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        .help-nav-btn.active {
+            background: rgba(57, 181, 74, 0.15);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .help-body {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .help-section {
+            display: none;
+        }
+
+        .help-section.active {
+            display: block;
+        }
+
+        .help-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .help-section h4 {
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .help-section p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .help-section ul, .help-section ol {
+            color: var(--text-secondary);
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .help-section code {
+            background: var(--bg-dark);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--primary);
+        }
+
+        .help-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .help-table th, .help-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .help-table th {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .help-table td {
+            color: var(--text-secondary);
+        }
+
+        .help-table a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+
+        .help-table a:hover {
+            text-decoration: underline;
+        }
+
+        .help-tip {
+            background: rgba(57, 181, 74, 0.1);
+            border: 1px solid rgba(57, 181, 74, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: var(--text-secondary);
+        }
+
+        .help-example {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .help-answer-type {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .help-answer-type h4 {
+            margin-top: 0;
+        }
+
+        .help-faq {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .help-faq h4 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        .help-reference-card {
+            background: var(--bg-dark);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .help-reference-card h4 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        .help-reference-card h4:not(:first-child) {
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .help-overlay {
+                padding: 0;
+            }
+
+            .help-modal {
+                max-height: 100vh;
+                border-radius: 0;
+            }
+
+            .help-content {
+                flex-direction: column;
+            }
+
+            .help-nav {
+                width: 100%;
+                flex-direction: row;
+                overflow-x: auto;
+                padding: 0.75rem;
+                gap: 0.25rem;
+            }
+
+            .help-nav-btn {
+                white-space: nowrap;
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+
+            .help-body {
+                padding: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -921,6 +1201,256 @@
             </div>
             <div class="kb-content" id="kbContent">
                 <div class="kb-grid" id="kbGrid"></div>
+            </div>
+        </div>
+
+        <footer style="text-align: center; padding: 2rem; margin-top: 2rem; border-top: 1px solid var(--border);">
+            <p style="color: var(--text-muted); font-size: 0.85rem;">
+                Hubstaff API Support Assistant v2.0 • 
+                <a href="#" onclick="openHelpOverlay(); return false;" style="color: var(--primary); text-decoration: none;">📖 User Manual</a> • 
+                <a href="https://developer.hubstaff.com/" target="_blank" style="color: var(--accent-blue); text-decoration: none;">API Docs ↗</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Help Overlay -->
+    <div id="helpOverlay" class="help-overlay">
+        <div class="help-modal">
+            <div class="help-header">
+                <h2>📖 User Manual</h2>
+                <button class="help-close" onclick="closeHelpOverlay()">✕</button>
+            </div>
+            <div class="help-content">
+                <div class="help-nav">
+                    <button class="help-nav-btn active" onclick="showHelpSection('quickstart')">🚀 Quick Start</button>
+                    <button class="help-nav-btn" onclick="showHelpSection('searching')">🔍 How to Search</button>
+                    <button class="help-nav-btn" onclick="showHelpSection('answers')">📖 Understanding Answers</button>
+                    <button class="help-nav-btn" onclick="showHelpSection('common')">💡 Common Questions</button>
+                    <button class="help-nav-btn" onclick="showHelpSection('reference')">📋 Quick Reference</button>
+                </div>
+                <div class="help-body">
+                    <!-- Quick Start Section -->
+                    <div id="help-quickstart" class="help-section active">
+                        <h3>🎯 What is this tool?</h3>
+                        <p>The <strong>Hubstaff API Support Assistant</strong> helps you quickly answer customer questions about what they can and can't do with the Hubstaff API — without needing to dig through developer documentation.</p>
+                        
+                        <p><strong>Just type a question like you'd ask a colleague:</strong></p>
+                        <ul>
+                            <li>"Can the customer create projects via API?"</li>
+                            <li>"Is check-in/check-out supported?"</li>
+                            <li>"Can they sync timesheets to their ERP?"</li>
+                        </ul>
+
+                        <h3>🚀 Quick Start (30 seconds)</h3>
+                        <ol>
+                            <li><strong>Type your question</strong> in the search box (or click a quick button)</li>
+                            <li><strong>Read the answer</strong> - you'll see ✅ YES, ❌ NO, or ⚠️ INDIRECT</li>
+                            <li><strong>Use the information</strong> to craft your response to the customer</li>
+                        </ol>
+                        <p>That's it! The tool gives you everything you need to know.</p>
+
+                        <div class="help-tip">
+                            <strong>💡 Pro Tip:</strong> Click the <strong>Data Capabilities Matrix</strong> at the bottom of the page for a quick overview of what's supported for each data type.
+                        </div>
+                    </div>
+
+                    <!-- Searching Section -->
+                    <div id="help-searching" class="help-section">
+                        <h3>🔍 How to Search</h3>
+                        
+                        <h4>Option 1: Type a Natural Question</h4>
+                        <p>Just ask what the customer is asking you:</p>
+                        <table class="help-table">
+                            <tr><th>Customer Asks</th><th>You Type</th></tr>
+                            <tr><td>"Can we pull timesheet data into our payroll?"</td><td><code>can I get timesheets</code></td></tr>
+                            <tr><td>"We want to auto-create projects from Salesforce"</td><td><code>can I create projects</code></td></tr>
+                            <tr><td>"Does the API support check-in/check-out?"</td><td><code>check in check out</code></td></tr>
+                            <tr><td>"Can we delete old screenshots via API?"</td><td><code>can I delete screenshots</code></td></tr>
+                        </table>
+
+                        <h4>Option 2: Click Quick Buttons</h4>
+                        <p>Use the quick search buttons below the search box for common topics like Time Tracking, Attendance, Projects, Screenshots, etc.</p>
+
+                        <h4>Option 3: Use the Capabilities Matrix</h4>
+                        <ol>
+                            <li>Click <strong>"🔄 API Data Capabilities Matrix"</strong> to expand it</li>
+                            <li>See at-a-glance what's supported for each data type</li>
+                            <li>Click any row to search for more details</li>
+                        </ol>
+
+                        <div class="help-tip">
+                            <strong>💡 Pro Tip:</strong> Keep searches simple! Use keywords like <code>create project</code> rather than long sentences.
+                        </div>
+                    </div>
+
+                    <!-- Understanding Answers Section -->
+                    <div id="help-answers" class="help-section">
+                        <h3>📖 Understanding the Answers</h3>
+
+                        <div class="help-answer-type">
+                            <h4>✅ YES — Fully Supported</h4>
+                            <p><strong>What it means:</strong> The customer CAN do this directly via the API.</p>
+                            <p><strong>You'll see:</strong></p>
+                            <ul>
+                                <li>📋 <strong>What you're asking</strong> - The interpreted question</li>
+                                <li>✅ <strong>How to achieve this</strong> - The endpoint(s) to use</li>
+                                <li>📝 <strong>Notes</strong> - Additional context</li>
+                                <li>📋 <strong>Requirements</strong> - Plan/add-on needed</li>
+                            </ul>
+                            <div class="help-example">
+                                <strong>Example response to customer:</strong><br>
+                                "Yes, you can create projects via the API using the POST endpoint. You'll need to be on a Team or Enterprise plan to access the API."
+                            </div>
+                        </div>
+
+                        <div class="help-answer-type">
+                            <h4>❌ NO — Not Possible</h4>
+                            <p><strong>What it means:</strong> This specific action is NOT available via the API.</p>
+                            <p><strong>You'll see:</strong></p>
+                            <ul>
+                                <li>❌ <strong>Why this isn't possible</strong> - The limitation</li>
+                                <li>💡 <strong>Alternative approach</strong> - Workaround if available</li>
+                            </ul>
+                            <div class="help-example">
+                                <strong>Example response to customer:</strong><br>
+                                "The API doesn't support deleting projects directly. However, you can archive projects by updating their status via the PUT endpoint."
+                            </div>
+                        </div>
+
+                        <div class="help-answer-type">
+                            <h4>⚠️ INDIRECT — Possible with a Workaround</h4>
+                            <p><strong>What it means:</strong> No direct endpoint, but the customer CAN achieve their goal differently.</p>
+                            <p><strong>You'll see:</strong></p>
+                            <ul>
+                                <li>⚠️ <strong>Why this is indirect</strong> - Why there's no direct way</li>
+                                <li>✅ <strong>How to achieve this instead</strong> - Alternative approach(es)</li>
+                            </ul>
+                            <div class="help-example">
+                                <strong>Example response to customer:</strong><br>
+                                "Hubstaff doesn't have a dedicated check-in endpoint, but there are two ways to achieve this: Activity-based tracking (included in all plans) or GPS Geofencing with Job Sites (requires Locations add-on)."
+                            </div>
+                        </div>
+
+                        <h4>Understanding Capability Badges</h4>
+                        <table class="help-table">
+                            <tr><th>Badge</th><th>Meaning</th></tr>
+                            <tr><td><span style="color: #22c55e;">✓ Read</span></td><td>Can retrieve/view this data</td></tr>
+                            <tr><td><span style="color: #22c55e;">✓ Create</span></td><td>Can create new records</td></tr>
+                            <tr><td><span style="color: #22c55e;">✓ Update</span></td><td>Can modify existing records</td></tr>
+                            <tr><td><span style="color: #22c55e;">✓ Delete</span></td><td>Can remove records</td></tr>
+                            <tr><td><span style="color: #ef4444;">✗</span></td><td>This operation is NOT supported</td></tr>
+                        </table>
+
+                        <h4>Understanding Sync Directions</h4>
+                        <table class="help-table">
+                            <tr><th>Icon</th><th>Direction</th><th>Meaning</th></tr>
+                            <tr><td>→</td><td>Outbound</td><td>Data flows FROM Hubstaff only (read-only)</td></tr>
+                            <tr><td>←</td><td>Inbound</td><td>Data flows TO Hubstaff only</td></tr>
+                            <tr><td>↔</td><td>Bi-directional</td><td>Data can flow both ways</td></tr>
+                            <tr><td>📤</td><td>Push</td><td>Real-time notifications (webhooks)</td></tr>
+                        </table>
+                    </div>
+
+                    <!-- Common Questions Section -->
+                    <div id="help-common" class="help-section">
+                        <h3>💡 Common Customer Questions</h3>
+
+                        <div class="help-faq">
+                            <h4>"Can we integrate with our ERP/payroll system?"</h4>
+                            <p><strong>Search:</strong> <code>erp integration</code> or <code>sync payroll</code></p>
+                            <p><strong>Quick Answer:</strong> Yes! API supports pulling timesheets (read-only), activities (read-only), projects (read/write), tasks (full CRUD), and users (read-only). Requires Team or Enterprise plan. Rate limit: 350 req/min.</p>
+                        </div>
+
+                        <div class="help-faq">
+                            <h4>"Does the API support attendance/check-in?"</h4>
+                            <p><strong>Search:</strong> <code>attendance</code> or <code>check in</code></p>
+                            <p><strong>Quick Answer:</strong> Yes, two ways:</p>
+                            <ol>
+                                <li><strong>Activity-based</strong> (all plans): First/last activity = start/end of day</li>
+                                <li><strong>Job Site Visits</strong> (Locations add-on): GPS geofencing for explicit check-in/out</li>
+                            </ol>
+                        </div>
+
+                        <div class="help-faq">
+                            <h4>"Can they create users via API?"</h4>
+                            <p><strong>Search:</strong> <code>create user</code></p>
+                            <p><strong>Quick Answer:</strong> INDIRECT — Use the Invites endpoint to send invitations. User must accept to join. Can set role and project assignments in the invite.</p>
+                        </div>
+
+                        <div class="help-faq">
+                            <h4>"Can they delete time entries?"</h4>
+                            <p><strong>Search:</strong> <code>delete time entry</code></p>
+                            <p><strong>Quick Answer:</strong> NO — Must be done in the Hubstaff UI. Can create new entries, but not modify or delete existing ones.</p>
+                        </div>
+
+                        <div class="help-faq">
+                            <h4>"What plan do they need for API access?"</h4>
+                            <p><strong>Search:</strong> <code>plan</code></p>
+                            <p><strong>Quick Answer:</strong></p>
+                            <ul>
+                                <li>Starter: ❌ Limited/No access</li>
+                                <li>Team: ✅ Full access</li>
+                                <li>Enterprise: ✅ Full access (higher limits)</li>
+                            </ul>
+                        </div>
+
+                        <div class="help-faq">
+                            <h4>"What's the rate limit?"</h4>
+                            <p><strong>Search:</strong> <code>rate limit</code></p>
+                            <p><strong>Quick Answer:</strong> 350 requests per minute per token. Monitor with X-RateLimit headers. Use exponential backoff on 429 errors.</p>
+                        </div>
+
+                        <h4>🔗 Useful Links to Share</h4>
+                        <table class="help-table">
+                            <tr><th>Resource</th><th>When to share</th></tr>
+                            <tr><td><a href="https://developer.hubstaff.com/" target="_blank">API Documentation</a></td><td>Customer wants to start integrating</td></tr>
+                            <tr><td><a href="https://developer.hubstaff.com/authentication" target="_blank">Authentication Guide</a></td><td>Setting up API access</td></tr>
+                            <tr><td><a href="https://github.com/NetsoftHoldings/public-api-postman" target="_blank">Postman Collection</a></td><td>Customer wants to test API</td></tr>
+                            <tr><td><a href="https://hubstaff.com/pricing" target="_blank">Pricing Page</a></td><td>Customer needs to upgrade</td></tr>
+                        </table>
+                    </div>
+
+                    <!-- Quick Reference Section -->
+                    <div id="help-reference" class="help-section">
+                        <h3>📋 Quick Reference Card</h3>
+                        
+                        <div class="help-reference-card">
+                            <h4>Answer Types</h4>
+                            <ul>
+                                <li>✅ <strong>YES</strong> = Directly supported</li>
+                                <li>❌ <strong>NO</strong> = Not possible (check alternatives)</li>
+                                <li>⚠️ <strong>INDIRECT</strong> = Possible with workaround</li>
+                            </ul>
+
+                            <h4>Common Answers at a Glance</h4>
+                            <table class="help-table">
+                                <tr><th>Data Type</th><th>Capabilities</th></tr>
+                                <tr><td>Timesheets</td><td>READ-ONLY (pull from Hubstaff)</td></tr>
+                                <tr><td>Projects</td><td>Full CRUD (except delete - archive instead)</td></tr>
+                                <tr><td>Tasks</td><td>Full CRUD</td></tr>
+                                <tr><td>Users</td><td>Read-only (use Invites to add)</td></tr>
+                                <tr><td>Time Entries</td><td>Read + Create (no edit/delete)</td></tr>
+                                <tr><td>Screenshots</td><td>Read-only</td></tr>
+                                <tr><td>Check-in</td><td>Use Activities OR Job Site Visits</td></tr>
+                                <tr><td>Webhooks</td><td>Read + Create + Delete</td></tr>
+                            </table>
+
+                            <h4>Requirements</h4>
+                            <ul>
+                                <li><strong>API Access:</strong> Team or Enterprise plan</li>
+                                <li><strong>GPS/Geofencing:</strong> Locations add-on</li>
+                                <li><strong>Rate Limit:</strong> 350 requests/minute</li>
+                            </ul>
+
+                            <h4>Sync Directions</h4>
+                            <ul>
+                                <li><strong>→ Outbound</strong> = Hubstaff → External (read-only)</li>
+                                <li><strong>↔ Both</strong> = Bi-directional sync</li>
+                                <li><strong>📤 Push</strong> = Webhooks (real-time notifications)</li>
+                            </ul>
+                        </div>
+                    </div>
+                 </div>
             </div>
         </div>
     </div>
@@ -3195,6 +3725,52 @@
                     handleSearch();
                 }
             });
+        });
+
+        // =====================================================
+        // HELP OVERLAY FUNCTIONS
+        // =====================================================
+
+        function openHelpOverlay() {
+            document.getElementById('helpOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeHelpOverlay() {
+            document.getElementById('helpOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function showHelpSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.help-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active from all nav buttons
+            document.querySelectorAll('.help-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById('help-' + sectionId).classList.add('active');
+            
+            // Set active nav button
+            event.target.classList.add('active');
+        }
+
+        // Close overlay when clicking outside the modal
+        document.getElementById('helpOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeHelpOverlay();
+            }
+        });
+
+        // Close overlay with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeHelpOverlay();
+            }
         });
     </script>
 </body>
