@@ -2747,7 +2747,10 @@
                     ],
                     notes: ['Full CRUD supported for tasks', 'Tasks must be associated with a project'],
                     requirements: ['Team or Enterprise plan'],
-                    limitations: []
+                    limitations: [
+        'Cannot create tasks in projects linked to a task integration (Jira, Asana, Redmine, etc.) - error code 11000',
+        'To use API for task creation, the project must not have an active task integration'
+    ]
                 },
                 'update task': { 
                     answer: 'YES', 
