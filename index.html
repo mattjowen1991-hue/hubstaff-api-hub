@@ -1555,8 +1555,10 @@
                 syncDirection: "both",
                 description: "Full CRUD operations for task management",
                 limitations: [
-                    "Tasks must be associated with a project",
-                    "Task assignees managed via update endpoint"
+        "Tasks must be associated with a project",
+        "Task assignees managed via update endpoint",
+        "Cannot create/update tasks in projects linked to an integration (Jira, Asana, Redmine, etc.) - error 11000"
+    ],
                 ],
                 useCases: ["Task management sync", "Jira/Asana integration", "Auto-task creation", "Two-way task sync"],
                 relatedCategories: ["tasks"]
